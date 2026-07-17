@@ -1,0 +1,14 @@
+[
+  {
+    "id": 2,
+    "name": "Django",
+    "slug": "django",
+    "url": "/blog/tag/django/"
+  },
+  {
+    "id": 1,
+    "name": "Python",
+    "slug": "python",
+    "url": "/blog/tag/python/"
+  }
+]

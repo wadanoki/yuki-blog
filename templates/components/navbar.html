@@ -1,0 +1,743 @@
+{% load static %}
+
+<header
+    id="site-header"
+    class="fixed inset-x-0 top-0 z-50"
+>
+    <div class="site-shell flex h-16 items-center justify-between">
+
+        <a
+            href="{% url 'core:home' %}"
+            class="mobile-home-link"
+            aria-label="返回首页"
+        >
+            Yuki
+        </a>
+
+        <nav
+            id="desktop-navigation"
+            class="paper-panel absolute left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-lg p-1 shadow-sm"
+            aria-label="主导航"
+        >
+
+            {# ================= 首页 ================= #}
+            <div
+                id="home-nav-group"
+                class="desktop-nav-group relative inline-flex items-center"
+            >
+                <a
+                    id="home-nav-trigger"
+                    href="{% url 'core:home' %}"
+                    class="desktop-nav-trigger js-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                    data-path="/"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="home-dropdown"
+                >
+                    <span aria-hidden="true">⌂</span>
+                    <span>首页</span>
+                </a>
+
+                <div
+                    id="home-dropdown"
+                    class="desktop-nav-dropdown desktop-nav-dropdown--home absolute left-0 top-full z-50 w-[420px]"
+                >
+                    <div class="home-hover-card">
+                        <section class="home-profile-panel">
+                            <div class="home-profile-heading">
+                                <img
+                                    src="{% static 'images/avatar.png' %}"
+                                    alt="{{ site_owner_name }} 的头像"
+                                    width="64"
+                                    height="64"
+                                >
+
+                                <div class="min-w-0">
+                                    <strong class="home-profile-name">
+                                        {{ site_owner_name }}
+                                    </strong>
+                                    <span class="home-profile-status">
+                                        <i aria-hidden="true"></i>
+                                        在线
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p class="home-profile-tagline">
+                                {{ site_owner_tagline }}
+                            </p>
+
+                            <dl class="home-profile-stats">
+                                <div>
+                                    <dt>{{ nav_total_content_count|default:0 }}</dt>
+                                    <dd>文</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ nav_total_word_count|default:'0' }}</dt>
+                                    <dd>字</dd>
+                                </div>
+                                <div>
+                                    <dt>{{ nav_site_running_days|default:1 }}</dt>
+                                    <dd>日</dd>
+                                </div>
+                            </dl>
+                        </section>
+
+                        <section class="home-pages-panel">
+                            <p class="home-dropdown-label">页面</p>
+
+                            <nav
+                                class="home-page-grid"
+                                aria-label="个人与站点页面"
+                            >
+                                <a href="{% url 'core:site_page' 'about' %}" class="home-page-link">
+                                    <strong>自述</strong>
+                                </a>
+
+                                <a href="{% url 'core:site_page' 'soul' %}" class="home-page-link">
+                                    <strong>灵魂</strong>
+                                </a>
+
+                                <a href="{% url 'core:site_page' 'site' %}" class="home-page-link">
+                                    <strong>此站点</strong>
+                                </a>
+
+                                <a href="{% url 'core:site_page' 'guestbook' %}" class="home-page-link">
+                                    <strong>留言</strong>
+                                </a>
+                            </nav>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            {# ================= 文稿 ================= #}
+            <div
+                id="writing-nav-group"
+                class="desktop-nav-group relative inline-flex items-center"
+            >
+                <a
+                    id="writing-nav-trigger"
+                    href="{% url 'blog:post_list' %}"
+                    class="desktop-nav-trigger js-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                    data-path="/blog/"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="writing-dropdown"
+                >
+                    <span aria-hidden="true">▣</span>
+                    <span>文稿</span>
+                </a>
+
+
+                <div
+                    id="writing-dropdown"
+                    class="desktop-nav-dropdown desktop-nav-dropdown--center absolute left-1/2 top-full z-50 w-[570px]"
+                >
+                    <div class="grid grid-cols-[190px_1fr] gap-5 p-4">
+
+                        {# 左侧分类 #}
+                        <section>
+                            <p class="mb-3 text-caption-10 text-neutral-5">
+                                分类
+                            </p>
+
+                            <div class="space-y-1">
+
+                                <a
+                                    href="{% url 'blog:post_list' %}"
+                                    class="writing-category-item flex min-h-10 items-center justify-between rounded-md px-3 text-copy-13 text-neutral-8 transition hover:bg-neutral-2 hover:text-neutral-10"
+                                    data-category-target="all"
+                                >
+                                    <span>全部</span>
+
+                                    <span class="text-neutral-5">
+                                        {{ nav_post_count|default:0 }}
+                                    </span>
+                                </a>
+
+
+                                {% for category in nav_categories %}
+                                    <a
+                                        href="{{ category.get_absolute_url }}"
+                                        class="writing-category-item flex min-h-10 items-center justify-between rounded-md px-3 text-copy-13 text-neutral-8 transition hover:bg-neutral-2 hover:text-neutral-10"
+                                        data-category-target="{{ category.slug }}"
+                                    >
+                                        <span class="min-w-0 truncate">
+                                            {{ category.name }}
+                                        </span>
+
+                                        <span class="ml-3 shrink-0 text-neutral-5">
+                                            {{ category.published_count }}
+                                        </span>
+                                    </a>
+                                {% empty %}
+                                    <p class="px-3 py-4 text-copy-13 text-neutral-5">
+                                        暂时没有文稿分类。
+                                    </p>
+                                {% endfor %}
+
+                            </div>
+                        </section>
+
+
+                        {# 右侧文稿列表 #}
+                        <section class="min-w-0">
+
+                            {# 全部文稿 #}
+                            <div
+                                class="writing-post-panel"
+                                data-category-panel="all"
+                            >
+                                <p class="mb-3 text-caption-10 text-neutral-5">
+                                    最近文稿
+                                </p>
+
+                                <div class="space-y-1.5">
+
+                                    {% for post in nav_posts %}
+                                        <a
+                                            href="{{ post.get_absolute_url }}"
+                                            class="block rounded-lg bg-neutral-2 px-3 py-2.5 transition hover:bg-neutral-3"
+                                        >
+                                            <strong
+                                                class="block text-copy-13 font-medium leading-6 text-neutral-9"
+                                            >
+                                                {{ post.title|truncatechars:38 }}
+                                            </strong>
+
+                                            <time
+                                                class="mt-1 block text-caption-10 text-neutral-5"
+                                                datetime="{{ post.published_at|date:'c' }}"
+                                            >
+                                                {{ post.published_at|timesince }}前
+                                            </time>
+                                        </a>
+                                    {% empty %}
+                                        <p class="py-5 text-copy-13 text-neutral-5">
+                                            暂时没有已发布文稿。
+                                        </p>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+
+
+                            {# 各分类文稿 #}
+                            {% for category in nav_categories %}
+                                <div
+                                    class="writing-post-panel hidden"
+                                    data-category-panel="{{ category.slug }}"
+                                >
+                                    <p class="mb-3 text-caption-10 text-neutral-5">
+                                        {{ category.name }} · 最近
+                                    </p>
+
+                                    <div class="space-y-1.5">
+
+                                        {% for post in category.nav_published_posts|slice:":4" %}
+                                            <a
+                                                href="{{ post.get_absolute_url }}"
+                                                class="block rounded-lg bg-neutral-2 px-3 py-2.5 transition hover:bg-neutral-3"
+                                            >
+                                                <strong
+                                                    class="block text-copy-13 font-medium leading-6 text-neutral-9"
+                                                >
+                                                    {{ post.title|truncatechars:38 }}
+                                                </strong>
+
+                                                <time
+                                                    class="mt-1 block text-caption-10 text-neutral-5"
+                                                    datetime="{{ post.published_at|date:'c' }}"
+                                                >
+                                                    {{ post.published_at|timesince }}前
+                                                </time>
+                                            </a>
+                                        {% empty %}
+                                            <p class="py-5 text-copy-13 text-neutral-5">
+                                                该分类暂时没有文稿。
+                                            </p>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </section>
+
+                    </div>
+
+
+                    <footer
+                        class="flex items-center justify-between border-t border-neutral-3 px-4 py-3 text-caption-10 text-neutral-6"
+                    >
+                        <a
+                            href="{% url 'blog:post_list' %}"
+                            class="transition hover:text-accent"
+                        >
+                            查看全部文稿
+                        </a>
+
+                        <span>
+                            {{ nav_post_count|default:0 }} 篇文稿
+                        </span>
+                    </footer>
+                </div>
+            </div>
+
+
+            {# ================= 手记 ================= #}
+            <div
+                id="notes-nav-group"
+                class="desktop-nav-group relative inline-flex items-center"
+            >
+                <a
+                    id="notes-nav-trigger"
+                    href="{% url 'blog:note_list' %}"
+                    class="desktop-nav-trigger js-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                    data-path="/blog/notes/"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="notes-dropdown"
+                >
+                    <span aria-hidden="true">♧</span>
+                    <span>手记</span>
+                </a>
+
+
+                <div
+                    id="notes-dropdown"
+                    class="desktop-nav-dropdown desktop-nav-dropdown--center absolute left-1/2 top-full z-50 w-[570px]"
+                >
+                    <div class="grid grid-cols-[190px_1fr] gap-5 p-4">
+
+                        {# 左侧专栏 #}
+                        <section>
+                            <p class="mb-3 text-caption-10 text-neutral-5">
+                                专栏
+                            </p>
+
+                            <div class="space-y-1">
+
+                                <a
+                                    href="{% url 'blog:note_list' %}"
+                                    class="notes-collection-item flex min-h-10 items-center gap-2 rounded-md px-3 text-copy-13 text-neutral-8 transition hover:bg-neutral-2 hover:text-neutral-10"
+                                    data-collection-target="all"
+                                >
+                                    <span
+                                        class="w-5 text-center"
+                                        aria-hidden="true"
+                                    >
+                                        ◇
+                                    </span>
+
+                                    <span class="min-w-0 flex-1 truncate">
+                                        全部手记
+                                    </span>
+
+                                    <span class="shrink-0 text-neutral-5">
+                                        {{ nav_note_count|default:0 }}
+                                    </span>
+                                </a>
+
+
+                                {% for collection in nav_note_collections %}
+                                    <a
+                                        href="{{ collection.get_absolute_url }}"
+                                        class="notes-collection-item flex min-h-10 items-center gap-2 rounded-md px-3 text-copy-13 text-neutral-8 transition hover:bg-neutral-2 hover:text-neutral-10"
+                                        data-collection-target="{{ collection.slug }}"
+                                    >
+                                        <span
+                                            class="w-5 text-center"
+                                            aria-hidden="true"
+                                        >
+                                            {{ collection.icon|default:"◇" }}
+                                        </span>
+
+                                        <span class="min-w-0 flex-1 truncate">
+                                            {{ collection.name }}
+                                        </span>
+
+                                        <span class="shrink-0 text-neutral-5">
+                                            {{ collection.published_count }}
+                                        </span>
+                                    </a>
+                                {% empty %}
+                                    <p class="px-3 py-4 text-copy-13 text-neutral-5">
+                                        暂时还没有手记专栏。
+                                    </p>
+                                {% endfor %}
+
+                            </div>
+                        </section>
+
+
+                        {# 右侧手记列表 #}
+                        <section class="min-w-0">
+
+                            {# 全部近期手记 #}
+                            <div
+                                class="notes-list-panel"
+                                data-collection-panel="all"
+                            >
+                                <p class="mb-3 text-caption-10 text-neutral-5">
+                                    近期手记
+                                </p>
+
+                                <div class="space-y-1.5">
+
+                                    {% for note in nav_notes %}
+                                        <a
+                                            href="{{ note.get_absolute_url }}"
+                                            class="block rounded-lg bg-neutral-2 px-3 py-2.5 transition hover:bg-neutral-3"
+                                        >
+                                            <strong
+                                                class="block text-copy-13 font-medium leading-6 text-neutral-9"
+                                            >
+                                                {{ note.title|truncatechars:34 }}
+                                            </strong>
+
+                                            <time
+                                                class="mt-1 block text-caption-10 text-neutral-5"
+                                                datetime="{{ note.published_at|date:'c' }}"
+                                            >
+                                                {{ note.published_at|timesince }}前
+                                            </time>
+                                        </a>
+                                    {% empty %}
+                                        <p class="py-5 text-copy-13 text-neutral-5">
+                                            暂时没有已发布手记。
+                                        </p>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+
+
+                            {# 各专栏近期手记 #}
+                            {% for collection in nav_note_collections %}
+                                <div
+                                    class="notes-list-panel hidden"
+                                    data-collection-panel="{{ collection.slug }}"
+                                >
+                                    <p class="mb-3 text-caption-10 text-neutral-5">
+                                        {{ collection.name }} · 最近
+                                    </p>
+
+                                    <div class="space-y-1.5">
+
+                                        {% for note in collection.nav_published_notes|slice:":4" %}
+                                            <a
+                                                href="{{ note.get_absolute_url }}"
+                                                class="block rounded-lg bg-neutral-2 px-3 py-2.5 transition hover:bg-neutral-3"
+                                            >
+                                                <strong
+                                                    class="block text-copy-13 font-medium leading-6 text-neutral-9"
+                                                >
+                                                    {{ note.title|truncatechars:34 }}
+                                                </strong>
+
+                                                <time
+                                                    class="mt-1 block text-caption-10 text-neutral-5"
+                                                    datetime="{{ note.published_at|date:'c' }}"
+                                                >
+                                                    {{ note.published_at|timesince }}前
+                                                </time>
+                                            </a>
+                                        {% empty %}
+                                            <p class="py-5 text-copy-13 text-neutral-5">
+                                                该专栏暂时没有手记。
+                                            </p>
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                        </section>
+
+                    </div>
+
+
+                    <footer
+                        class="flex items-center justify-between border-t border-neutral-3 px-4 py-3 text-caption-10 text-neutral-6"
+                    >
+                        <a
+                            href="{% url 'blog:note_list' %}"
+                            class="transition hover:text-accent"
+                        >
+                            查看全部手记
+                        </a>
+
+                        <a
+                            href="{% url 'blog:note_collection_list' %}"
+                            class="transition hover:text-accent"
+                        >
+                            全部专栏
+                        </a>
+                    </footer>
+                </div>
+            </div>
+
+
+            {# ================= 时光 ================= #}
+            <div
+                id="timeline-nav-group"
+                class="desktop-nav-group relative inline-flex items-center"
+            >
+                <a
+                    id="timeline-nav-trigger"
+                    href="{% url 'blog:timeline' %}"
+                    class="desktop-nav-trigger js-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                    data-path="/blog/timeline/"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="timeline-dropdown"
+                >
+                    <span aria-hidden="true">◷</span>
+                    <span>时光</span>
+                </a>
+
+
+                <div
+                    id="timeline-dropdown"
+                    class="desktop-nav-dropdown desktop-nav-dropdown--center absolute left-1/2 top-full z-50 w-[480px]"
+                >
+                    <div class="grid grid-cols-3 gap-2 p-4">
+
+                        <a
+                            href="{% url 'blog:timeline' %}?type=note"
+                            class="timeline-dropdown-tab"
+                        >
+                            <span aria-hidden="true">♧</span>
+                            <strong>手记</strong>
+                        </a>
+
+                        <a
+                            href="{% url 'blog:timeline' %}?type=post"
+                            class="timeline-dropdown-tab"
+                        >
+                            <span aria-hidden="true">▣</span>
+                            <strong>文稿</strong>
+                        </a>
+
+                        <a
+                            href="{% url 'blog:timeline' %}?type=memory"
+                            class="timeline-dropdown-tab"
+                        >
+                            <span aria-hidden="true">♥</span>
+                            <strong>回忆</strong>
+                        </a>
+
+                    </div>
+
+
+                    <div class="border-t border-neutral-3 px-4 py-3">
+
+                        <p class="mb-3 text-caption-10 text-neutral-5">
+                            近期动态
+                        </p>
+
+                        <div class="space-y-1.5">
+
+                            {% for item in nav_timeline_items %}
+                                <a
+                                    href="{{ item.url }}"
+                                    class="flex items-start gap-3 rounded-lg bg-neutral-2 px-3 py-2.5 transition hover:bg-neutral-3"
+                                >
+                                    <span class="min-w-0 flex-1">
+
+                                        <strong
+                                            class="block truncate text-copy-13 font-medium text-neutral-9"
+                                        >
+                                            {{ item.title }}
+                                        </strong>
+
+                                        <time
+                                            class="mt-1 block text-caption-10 text-neutral-5"
+                                            datetime="{{ item.date|date:'c' }}"
+                                        >
+                                            {{ item.date|timesince }}前
+                                        </time>
+
+                                    </span>
+
+                                    <span
+                                        class="shrink-0 text-caption-10 text-neutral-5"
+                                    >
+                                        {{ item.type_label }}
+                                    </span>
+                                </a>
+                            {% empty %}
+                                <p class="py-5 text-copy-13 text-neutral-5">
+                                    暂时没有近期动态。
+                                </p>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {# ================= 思考 ================= #}
+            <a
+                href="{% url 'blog:thought_list' %}"
+                class="desktop-nav-trigger js-nav-link inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                data-path="/blog/thoughts/"
+            >
+                <span aria-hidden="true">◇</span>
+                <span>思考</span>
+            </a>
+
+
+            {# ================= 更多 ================= #}
+            <div
+                id="more-nav-group"
+                class="desktop-nav-group relative inline-flex items-center"
+            >
+                <button
+                    id="more-nav-trigger"
+                    type="button"
+                    class="desktop-nav-trigger inline-flex h-9 items-center whitespace-nowrap rounded-md px-3 text-copy-13 text-neutral-7 transition hover:bg-neutral-2 hover:text-neutral-10"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="more-dropdown"
+                >
+                    <span>更多</span>
+                </button>
+
+
+                <div
+                    id="more-dropdown"
+                    class="desktop-nav-dropdown desktop-nav-dropdown--center absolute left-1/2 top-full z-50 w-[230px]"
+                >
+                    <nav
+                        class="more-menu-list"
+                        aria-label="更多页面"
+                    >
+
+                        <a
+                            href="{% url 'core:project_list' %}"
+                            class="more-menu-item"
+                        >
+                            <span
+                                class="more-menu-icon"
+                                aria-hidden="true"
+                            >
+                                △
+                            </span>
+
+                            <span class="more-menu-copy">
+                                <strong>项目</strong>
+                                <small>开源项目与作品集</small>
+                            </span>
+                        </a>
+
+
+                        <a
+                            href="{% url 'core:quote_list' %}"
+                            class="more-menu-item"
+                        >
+                            <span
+                                class="more-menu-icon"
+                                aria-hidden="true"
+                            >
+                                “
+                            </span>
+
+                            <span class="more-menu-copy">
+                                <strong>一言</strong>
+                                <small>言语的碎片</small>
+                            </span>
+                        </a>
+
+                    </nav>
+                </div>
+            </div>
+
+        </nav>
+
+
+        <div class="site-actions flex shrink-0 items-center gap-2">
+
+            <button
+                id="mobile-menu-button"
+                type="button"
+                class="mobile-menu-toggle"
+                aria-label="打开导航菜单"
+                aria-controls="mobile-menu"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+            <button
+                id="theme-toggle"
+                type="button"
+                class="grid size-9 place-items-center rounded-full text-copy-13 text-neutral-7 ring-1 ring-border transition hover:bg-neutral-2 hover:text-neutral-10"
+                aria-label="切换明暗主题"
+                title="切换明暗主题"
+            >
+                <span
+                    id="theme-icon"
+                    aria-hidden="true"
+                >
+                    ◐
+                </span>
+            </button>
+
+
+            {% if request.user.is_authenticated %}
+                <a
+                    href="/admin/"
+                    class="grid size-9 place-items-center rounded-full text-copy-13 text-neutral-7 ring-1 ring-border transition hover:bg-neutral-2 hover:text-neutral-10"
+                    aria-label="进入管理后台"
+                    title="管理后台"
+                >
+                    ⚙
+                </a>
+            {% else %}
+                <a
+                    href="/admin/login/"
+                    class="grid size-9 place-items-center rounded-full text-copy-13 text-neutral-7 ring-1 ring-border transition hover:bg-neutral-2 hover:text-neutral-10"
+                    aria-label="登录管理后台"
+                    title="登录"
+                >
+                    ♙
+                </a>
+            {% endif %}
+        </div>
+
+        <nav
+            id="mobile-menu"
+            class="mobile-navigation-panel hidden"
+            aria-label="移动端导航"
+        >
+            <section class="mobile-menu-section">
+                <p>主导航</p>
+                <a href="{% url 'core:home' %}">首页</a>
+                <a href="{% url 'blog:post_list' %}">文稿</a>
+                <a href="{% url 'blog:note_list' %}">手记</a>
+                <a href="{% url 'blog:timeline' %}">时光</a>
+                <a href="{% url 'blog:thought_list' %}">思考</a>
+            </section>
+
+            <section class="mobile-menu-section">
+                <p>页面</p>
+                <a href="{% url 'core:site_page' 'about' %}">自述</a>
+                <a href="{% url 'core:site_page' 'soul' %}">灵魂</a>
+                <a href="{% url 'core:site_page' 'site' %}">此站点</a>
+                <a href="{% url 'core:site_page' 'guestbook' %}">留言</a>
+            </section>
+
+            <section class="mobile-menu-section">
+                <p>更多</p>
+                <a href="{% url 'core:project_list' %}">项目</a>
+                <a href="{% url 'core:quote_list' %}">一言</a>
+            </section>
+        </nav>
+
+    </div>
+
+</header>

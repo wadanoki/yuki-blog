@@ -1,0 +1,51 @@
+{% extends "admin/change_form.html" %}
+
+{% block bodyclass %}
+    {{ block.super }} yuki-content-editor
+{% endblock %}
+
+{% block submit_buttons_bottom %}
+    <div class="yuki-content-actions">
+        {% if yuki_editor_flags %}
+            <div class="yuki-content-actions__toggles">
+                {% for flag in yuki_editor_flags %}
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="{{ flag.name }}"
+                            {% if flag.checked %}checked{% endif %}
+                        >
+                        <span>{{ flag.label }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="yuki-content-actions__buttons">
+            <button
+                type="submit"
+                name="_save_publish"
+                class="yuki-content-actions__primary"
+            >
+                保存并发布
+            </button>
+
+            <button
+                type="submit"
+                name="_save_draft"
+                class="yuki-content-actions__secondary"
+            >
+                保存为草稿
+            </button>
+
+            {% if change and original %}
+                <a
+                    href="delete/"
+                    class="yuki-content-actions__delete"
+                >
+                    删除
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

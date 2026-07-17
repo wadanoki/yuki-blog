@@ -1,0 +1,700 @@
+#content {
+    max-width: 1480px;
+    margin-inline: auto;
+}
+
+#content-main {
+    float: none;
+    width: 100%;
+}
+
+.yuki-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 46px;
+}
+
+.yuki-dashboard-hero {
+    position: relative;
+    display: flex;
+    min-height: 210px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    overflow: hidden;
+    padding: 38px 42px;
+    border: 1px solid var(--yuki-border);
+    border-radius: 22px;
+    background:
+        radial-gradient(
+            circle at 76% 30%,
+            rgb(206 101 122 / 12%),
+            transparent 26rem
+        ),
+        radial-gradient(
+            circle at 88% 90%,
+            rgb(172 214 196 / 18%),
+            transparent 22rem
+        ),
+        var(--yuki-panel);
+    box-shadow: var(--yuki-shadow);
+    backdrop-filter: blur(16px);
+}
+
+.yuki-dashboard-hero::after {
+    position: absolute;
+    right: 28%;
+    bottom: -80px;
+    width: 280px;
+    height: 180px;
+    border: 1px solid rgb(206 101 122 / 10%);
+    border-radius: 50%;
+    content: "";
+    transform: rotate(-12deg);
+}
+
+.yuki-dashboard-eyebrow,
+.yuki-section-heading p {
+    margin: 0;
+    color: var(--yuki-muted);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.yuki-dashboard-hero h1 {
+    margin: 8px 0 0;
+    color: var(--yuki-text);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 480;
+    letter-spacing: -0.045em;
+}
+
+.yuki-dashboard-hero h1 span {
+    color: var(--yuki-accent);
+}
+
+.yuki-dashboard-hero__copy > p:nth-of-type(2) {
+    max-width: 620px;
+    margin: 14px 0 0;
+    color: var(--yuki-muted);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.yuki-dashboard-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 26px;
+    color: var(--yuki-muted);
+    font-size: 10px;
+}
+
+.yuki-dashboard-orbit {
+    position: relative;
+    display: grid;
+    width: 132px;
+    height: 132px;
+    flex: 0 0 auto;
+    place-items: center;
+}
+
+.yuki-dashboard-orbit__ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(206 101 122 / 22%);
+    border-radius: 50%;
+    animation: yuki-orbit-spin 14s linear infinite;
+}
+
+.yuki-dashboard-orbit__ring::before {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--yuki-accent);
+    content: "";
+}
+
+.yuki-dashboard-orbit__avatar {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    place-items: center;
+    border: 1px solid rgb(206 101 122 / 20%);
+    border-radius: 50%;
+    background: var(--yuki-panel-solid);
+    color: var(--yuki-accent);
+    font-family: Georgia, serif;
+    font-size: 30px;
+    box-shadow: 0 14px 34px rgb(206 101 122 / 13%);
+}
+
+.yuki-dashboard-orbit__dot {
+    position: absolute;
+    right: 7px;
+    bottom: 26px;
+    width: 10px;
+    height: 10px;
+    border: 3px solid var(--yuki-panel-solid);
+    border-radius: 50%;
+    background: #70cf9a;
+}
+
+@keyframes yuki-orbit-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.yuki-section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+    padding-bottom: 13px;
+    border-bottom: 1px solid var(--yuki-border);
+}
+
+.yuki-section-heading h2 {
+    margin: 5px 0 0;
+    color: var(--yuki-text);
+    font-size: 18px;
+    font-weight: 520;
+}
+
+.yuki-section-heading > span,
+.yuki-section-heading > a {
+    color: var(--yuki-muted);
+    font-size: 10px;
+    text-decoration: none;
+}
+
+.yuki-section-heading > a:hover {
+    color: var(--yuki-accent);
+}
+
+.yuki-stat-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.yuki-stat-card {
+    position: relative;
+    display: flex;
+    min-height: 132px;
+    align-items: flex-end;
+    justify-content: space-between;
+    overflow: hidden;
+    padding: 22px;
+    border: 1px solid var(--yuki-border);
+    border-radius: 16px;
+    background: var(--yuki-panel);
+    color: var(--yuki-text) !important;
+    text-decoration: none;
+    box-shadow: 0 10px 28px rgb(59 51 39 / 3%);
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
+}
+
+.yuki-stat-card::before {
+    position: absolute;
+    top: -42px;
+    right: -32px;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: var(--stat-soft, var(--yuki-accent-soft));
+    content: "";
+}
+
+.yuki-stat-card:hover {
+    border-color: var(--stat-color, var(--yuki-accent));
+    box-shadow: 0 18px 38px rgb(59 51 39 / 7%);
+    transform: translateY(-3px);
+}
+
+.yuki-stat-card__icon {
+    position: absolute;
+    top: 17px;
+    right: 18px;
+    z-index: 1;
+    color: var(--stat-color, var(--yuki-accent));
+    font-size: 19px;
+}
+
+.yuki-stat-card strong {
+    display: block;
+    font-size: 34px;
+    font-weight: 430;
+    line-height: 1;
+}
+
+.yuki-stat-card small {
+    display: block;
+    margin-top: 9px;
+    color: var(--yuki-muted);
+    font-size: 10px;
+}
+
+.yuki-stat-card__arrow {
+    color: var(--yuki-muted);
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+}
+
+.yuki-stat-card:hover .yuki-stat-card__arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+}
+
+.yuki-stat-card--rose {
+    --stat-color: #ce657a;
+    --stat-soft: rgb(206 101 122 / 11%);
+}
+
+.yuki-stat-card--green {
+    --stat-color: #61a983;
+    --stat-soft: rgb(97 169 131 / 12%);
+}
+
+.yuki-stat-card--blue {
+    --stat-color: #6f8fbe;
+    --stat-soft: rgb(111 143 190 / 12%);
+}
+
+.yuki-stat-card--purple {
+    --stat-color: #9b7fbe;
+    --stat-soft: rgb(155 127 190 / 12%);
+}
+
+.yuki-stat-card--amber {
+    --stat-color: #b98d4f;
+    --stat-soft: rgb(185 141 79 / 12%);
+}
+
+.yuki-stat-card--cyan {
+    --stat-color: #5c9ea4;
+    --stat-soft: rgb(92 158 164 / 12%);
+}
+
+.yuki-stat-card--pink {
+    --stat-color: #c67dac;
+    --stat-soft: rgb(198 125 172 / 12%);
+}
+
+.yuki-stat-card--gray {
+    --stat-color: #7e7b74;
+    --stat-soft: rgb(126 123 116 / 10%);
+}
+
+.yuki-action-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.yuki-action-card {
+    display: grid;
+    min-height: 96px;
+    padding: 18px 20px;
+    border: 1px solid var(--yuki-border);
+    border-radius: 15px;
+    background: var(--yuki-panel);
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    gap: 13px;
+    align-items: center;
+    color: var(--yuki-text) !important;
+    text-decoration: none;
+    transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        background-color 180ms ease;
+}
+
+.yuki-action-card:hover {
+    border-color: rgb(206 101 122 / 30%);
+    background:
+        linear-gradient(
+            110deg,
+            var(--yuki-accent-soft),
+            var(--yuki-panel)
+        );
+    transform: translateX(3px);
+}
+
+.yuki-action-card__icon {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--yuki-accent-soft);
+    color: var(--yuki-accent);
+    font-size: 17px;
+}
+
+.yuki-action-card strong,
+.yuki-action-card small {
+    display: block;
+}
+
+.yuki-action-card strong {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.yuki-action-card small {
+    margin-top: 5px;
+    color: var(--yuki-muted);
+    font-size: 9px;
+}
+
+.yuki-action-card b {
+    color: var(--yuki-muted);
+    font-weight: 400;
+}
+
+.yuki-dashboard-columns {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr)
+        minmax(320px, 0.8fr);
+    gap: 17px;
+}
+
+.yuki-dashboard-panel {
+    padding: 22px;
+    border: 1px solid var(--yuki-border);
+    border-radius: 17px;
+    background: var(--yuki-panel);
+    box-shadow: var(--yuki-shadow);
+}
+
+.yuki-recent-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.yuki-recent-list a {
+    display: grid;
+    min-height: 54px;
+    padding: 0 5px;
+    grid-template-columns:
+        52px
+        minmax(0, 1fr)
+        auto
+        14px;
+    gap: 12px;
+    align-items: center;
+    border-bottom: 1px solid var(--yuki-border);
+    color: var(--yuki-text) !important;
+    text-decoration: none;
+}
+
+.yuki-recent-list a:last-child {
+    border-bottom: 0;
+}
+
+.yuki-recent-list a:hover strong {
+    color: var(--yuki-accent);
+}
+
+.yuki-content-type {
+    display: inline-flex;
+    justify-content: center;
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: var(--yuki-soft);
+    color: var(--yuki-muted);
+    font-size: 9px;
+}
+
+.yuki-recent-list strong {
+    overflow: hidden;
+    font-size: 11px;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.yuki-recent-list time,
+.yuki-recent-list a > span:last-child {
+    color: var(--yuki-muted);
+    font-size: 9px;
+}
+
+.yuki-distribution-item + .yuki-distribution-item {
+    margin-top: 17px;
+}
+
+.yuki-distribution-item header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.yuki-distribution-item header div {
+    min-width: 0;
+}
+
+.yuki-distribution-item strong,
+.yuki-distribution-item small {
+    display: block;
+}
+
+.yuki-distribution-item strong {
+    overflow: hidden;
+    color: var(--yuki-text);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.yuki-distribution-item small {
+    margin-top: 3px;
+    color: var(--yuki-muted);
+    font-size: 8px;
+}
+
+.yuki-distribution-item header > span {
+    color: var(--yuki-muted);
+    font-size: 10px;
+}
+
+.yuki-distribution-track {
+    height: 5px;
+    margin-top: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--yuki-soft);
+}
+
+.yuki-distribution-track span {
+    display: block;
+    width: var(--distribution-width);
+    height: 100%;
+    border-radius: inherit;
+    background:
+        linear-gradient(
+            90deg,
+            var(--yuki-accent),
+            #df9bab
+        );
+}
+
+.yuki-draft-notice {
+    display: grid;
+    margin-top: 24px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--yuki-accent-soft);
+    grid-template-columns:
+        30px
+        minmax(0, 1fr)
+        auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.yuki-draft-notice > span {
+    color: var(--yuki-accent);
+    font-size: 20px;
+}
+
+.yuki-draft-notice strong,
+.yuki-draft-notice small {
+    display: block;
+}
+
+.yuki-draft-notice strong {
+    font-size: 19px;
+}
+
+.yuki-draft-notice small {
+    margin-top: 2px;
+    color: var(--yuki-muted);
+    font-size: 9px;
+}
+
+.yuki-draft-notice a {
+    color: var(--yuki-accent);
+    font-size: 9px;
+    text-decoration: none;
+}
+
+.yuki-admin-apps {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.yuki-admin-app {
+    overflow: hidden;
+    border: 1px solid var(--yuki-border);
+    border-radius: 16px;
+    background: var(--yuki-panel);
+    box-shadow: 0 10px 28px rgb(59 51 39 / 3%);
+}
+
+.yuki-admin-app > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 17px 19px;
+    border-bottom: 1px solid var(--yuki-border);
+}
+
+.yuki-admin-app > header > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.yuki-admin-app > header span {
+    display: grid;
+    width: 27px;
+    height: 27px;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--yuki-accent-soft);
+    color: var(--yuki-accent);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.yuki-admin-app h3 {
+    margin: 0;
+    color: var(--yuki-text);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.yuki-admin-app > header small {
+    color: var(--yuki-muted);
+    font-size: 8px;
+}
+
+.yuki-admin-app__models {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.yuki-admin-app__models a {
+    display: grid;
+    min-height: 48px;
+    padding: 0 17px;
+    border-right: 1px solid var(--yuki-border);
+    border-bottom: 1px solid var(--yuki-border);
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        12px;
+    gap: 9px;
+    align-items: center;
+    color: var(--yuki-text) !important;
+    text-decoration: none;
+}
+
+.yuki-admin-app__models a:hover {
+    background: var(--yuki-accent-soft);
+}
+
+.yuki-admin-app__models span {
+    overflow: hidden;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.yuki-admin-app__models small,
+.yuki-admin-app__models b {
+    color: var(--yuki-muted);
+    font-size: 8px;
+    font-weight: 400;
+}
+
+.yuki-empty-state {
+    padding: 44px 0;
+    color: var(--yuki-muted);
+    font-size: 11px;
+    text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .yuki-dashboard-orbit__ring {
+        animation: none;
+    }
+}
+
+@media (max-width: 1050px) {
+    .yuki-stat-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .yuki-action-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .yuki-dashboard-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .yuki-dashboard {
+        gap: 34px;
+    }
+
+    .yuki-dashboard-hero {
+        min-height: auto;
+        align-items: flex-start;
+        padding: 28px 24px;
+    }
+
+    .yuki-dashboard-orbit {
+        display: none;
+    }
+
+    .yuki-stat-grid,
+    .yuki-action-grid,
+    .yuki-admin-apps {
+        grid-template-columns: 1fr;
+    }
+
+    .yuki-admin-app__models {
+        grid-template-columns: 1fr;
+    }
+
+    .yuki-recent-list a {
+        grid-template-columns:
+            48px
+            minmax(0, 1fr)
+            12px;
+    }
+
+    .yuki-recent-list time {
+        display: none;
+    }
+
+    .yuki-section-heading > span {
+        display: none;
+    }
+}

@@ -1,0 +1,440 @@
+@layer components {
+    .note-detail-page {
+        position: relative;
+        min-height: 100vh;
+        padding: 92px 0 120px;
+        overflow: visible;
+    }
+
+    .note-detail-layout {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        width: min(calc(100% - 48px), 1520px);
+        margin-inline: auto;
+        grid-template-columns:
+            190px
+            minmax(0, 980px)
+            180px;
+        gap: 34px;
+        align-items: start;
+        justify-content: center;
+        overflow: visible;
+    }
+
+
+    /* 左侧栏 */
+
+    .note-left-sidebar {
+        position: sticky;
+        top: 96px;
+        align-self: start;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        scrollbar-width: none;
+    }
+
+    .note-left-sidebar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .note-left-sidebar__inner {
+        padding: 12px 4px;
+    }
+
+    .note-side-section {
+        min-width: 0;
+    }
+
+    .note-side-eyebrow {
+        color: var(--color-neutral-7);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .note-side-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 9px;
+    }
+
+    .note-side-link {
+        overflow: hidden;
+        color: var(--color-neutral-6);
+        font-size: 12px;
+        line-height: 1.55;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition:
+            color 160ms ease,
+            transform 160ms ease;
+    }
+
+    .note-side-link:hover {
+        color: var(--color-accent);
+        transform: translateX(2px);
+    }
+
+    .note-side-empty,
+    .note-side-description {
+        margin-top: 8px;
+        color: var(--color-neutral-5);
+        font-size: 11px;
+        line-height: 1.8;
+    }
+
+    .note-side-divider {
+        width: 110px;
+        margin: 20px 0;
+        border-top: 1px dashed var(--color-neutral-3);
+    }
+
+
+    /* 中间纸张 */
+
+    .note-paper {
+        position: relative;
+        min-width: 0;
+        padding: 66px 54px 54px;
+        border: 1px solid var(--color-neutral-3);
+        border-radius: 3px;
+        background:
+            color-mix(
+                in srgb,
+                var(--color-neutral-1) 95%,
+                transparent
+            );
+        box-shadow:
+            10px 8px 0 -4px var(--color-neutral-1),
+            10px 8px 0 -3px var(--color-neutral-3),
+            20px 16px 0 -9px var(--color-neutral-1),
+            20px 16px 0 -8px var(--color-neutral-3),
+            0 20px 48px
+            color-mix(
+                in srgb,
+                var(--color-neutral-10) 5%,
+                transparent
+            );
+    }
+
+    .note-paper-ribbon {
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        z-index: 3;
+        min-width: 88px;
+        padding: 9px 16px;
+        border-radius: 0 5px 5px 0;
+        background: var(--color-accent);
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        box-shadow:
+            0 4px 10px
+            rgb(0 0 0 / 12%);
+    }
+
+    .note-paper-ribbon::before {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 5px;
+        height: 32px;
+        content: "";
+        background:
+            color-mix(
+                in srgb,
+                var(--color-accent) 70%,
+                black
+            );
+    }
+
+    .note-paper-title {
+        color: var(--color-neutral-10);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: clamp(32px, 4vw, 44px);
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .note-paper-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--color-neutral-3);
+        color: var(--color-neutral-5);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 11px;
+        font-style: italic;
+    }
+
+    .note-paper-meta__stats {
+        display: flex;
+        gap: 8px;
+        font-style: normal;
+    }
+
+    .note-paper-tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+        color: var(--color-neutral-5);
+        font-size: 10px;
+    }
+
+    .note-paper-tools a {
+        transition: color 160ms ease;
+    }
+
+    .note-paper-tools a:hover {
+        color: var(--color-accent);
+    }
+
+    .note-paper-cover {
+        margin: 28px -18px 34px;
+        overflow: hidden;
+        border-radius: 3px;
+    }
+
+    .note-paper-cover img {
+        width: 100%;
+        max-height: 520px;
+        object-fit: cover;
+    }
+
+    .note-paper-summary {
+        margin: 26px 0 34px;
+        color: var(--color-neutral-6);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 13px;
+        line-height: 2;
+    }
+
+    .note-paper-summary__label {
+        margin-bottom: 6px;
+        color: var(--color-neutral-5);
+        font-size: 11px;
+        font-style: italic;
+    }
+
+    .note-prose {
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 16px;
+        line-height: 2.15;
+    }
+
+    .note-prose > p:first-child::first-letter {
+        float: left;
+        margin: 0.07em 0.15em 0 0;
+        color: var(--color-neutral-10);
+        font-size: 3.2em;
+        line-height: 0.82;
+    }
+
+    .note-prose h2 {
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 28px;
+    }
+
+    .note-prose h3 {
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 22px;
+    }
+
+    .note-paper-footer {
+        margin-top: 80px;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-neutral-3);
+    }
+
+    .note-paper-license {
+        color: var(--color-neutral-5);
+        font-size: 10px;
+        line-height: 1.9;
+    }
+
+    .note-neighbours {
+        display: grid;
+        margin-top: 42px;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .note-neighbours span {
+        display: block;
+        color: var(--color-neutral-5);
+        font-size: 10px;
+    }
+
+    .note-neighbours a {
+        display: inline-block;
+        margin-top: 6px;
+        color: var(--color-neutral-8);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 13px;
+        line-height: 1.8;
+        transition: color 160ms ease;
+    }
+
+    .note-neighbours a:hover {
+        color: var(--color-accent);
+    }
+
+
+    /* 右侧目录 */
+
+    .note-right-sidebar {
+        position: sticky;
+        top: 96px;
+        align-self: start;
+        height: calc(100vh - 120px);
+        max-height: 680px;
+    }
+
+    .note-right-sidebar__inner {
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        padding: 18px 0;
+    }
+
+    .note-toc {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 360px;
+        overflow: hidden;
+    }
+
+    .note-toc__link {
+        position: relative;
+        padding-left: 14px;
+        color: var(--color-neutral-4);
+        font-size: 12px;
+        line-height: 1.6;
+        transition:
+            color 160ms ease,
+            transform 160ms ease;
+    }
+
+    .note-toc__link[data-level="3"] {
+        padding-left: 28px;
+        font-size: 11px;
+    }
+
+    .note-toc__link:hover {
+        color: var(--color-neutral-8);
+    }
+
+    .note-toc__link.is-active {
+        color: var(--color-accent);
+        transform: translateX(2px);
+    }
+
+    .note-toc__link.is-active::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        content: "";
+        background: var(--color-accent);
+    }
+
+    .note-toc__empty {
+        color: var(--color-neutral-5);
+        font-size: 11px;
+    }
+
+    .note-toc-wave {
+        width: 145px;
+        height: 18px;
+        margin: 18px 0 11px;
+    }
+
+    .note-toc-wave svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .note-toc-wave path {
+        fill: none;
+        stroke: var(--color-neutral-3);
+        stroke-width: 1.4;
+    }
+
+    .note-reading-progress {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--color-neutral-7);
+        font-size: 13px;
+    }
+
+    .note-reading-progress__circle {
+        width: 17px;
+        height: 17px;
+        border-radius: 9999px;
+        background:
+            conic-gradient(
+                var(--color-accent)
+                var(--note-reading-progress, 0deg),
+                var(--color-neutral-3)
+                0
+            );
+        mask:
+            radial-gradient(
+                circle,
+                transparent 47%,
+                #000 51%
+            );
+    }
+
+    .note-back-to-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        color: var(--color-neutral-5);
+        font-size: 11px;
+    }
+
+    .note-back-to-top:hover {
+        color: var(--color-accent);
+    }
+
+    .note-font-hint {
+        margin-top: 12px;
+        color: var(--color-neutral-5);
+        font-size: 10px;
+    }
+}
+
+

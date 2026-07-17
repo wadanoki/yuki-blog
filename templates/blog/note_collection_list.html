@@ -1,0 +1,77 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    全部专栏 - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    Yuki Blog 的全部手记专栏。
+{% endblock %}
+
+{% block content %}
+
+<section class="note-collection-index-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="note-collection-index-shell">
+
+        <header class="note-collection-index-header">
+
+            <span class="note-collection-index-line"></span>
+
+            <h1>专栏</h1>
+
+        </header>
+
+
+        <div class="note-collection-index-list">
+
+            {% for collection in collections %}
+
+                <a
+                    href="{{ collection.get_absolute_url }}"
+                    class="note-collection-index-row"
+                >
+
+                    <time>
+                        {% if collection.created_at %}
+                            {{ collection.created_at|date:"Y-m-d" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </time>
+
+                    <span>
+                        {{ collection.name }}
+                    </span>
+
+                </a>
+
+            {% empty %}
+
+                <p class="note-empty-state">
+                    暂时没有手记专栏。
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <footer class="note-collection-index-footer">
+
+            <a href="{% url 'blog:note_list' %}">
+                ← 返回全部手记
+            </a>
+
+        </footer>
+
+    </div>
+
+</section>
+
+{% endblock %}

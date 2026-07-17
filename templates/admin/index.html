@@ -1,0 +1,378 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <link
+        rel="stylesheet"
+        href="{% static 'admin_custom/css/dashboard.css' %}"
+    >
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    <script
+        src="{% static 'admin_custom/js/dashboard.js' %}"
+        defer
+    ></script>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+
+<div class="yuki-dashboard">
+
+    <header class="yuki-dashboard-hero">
+
+        <div class="yuki-dashboard-hero__copy">
+
+            <p class="yuki-dashboard-eyebrow">
+                Yuki Blog Console
+            </p>
+
+            <h1>
+                欢迎回来，
+                <span>
+                    {{ request.user.get_short_name|default:request.user.username }}
+                </span>
+            </h1>
+
+            <p>
+                今天也继续整理思想、记录生活，并让这个博客慢慢生长。
+            </p>
+
+            <div class="yuki-dashboard-hero__meta">
+
+                <span id="dashboard-date">
+                    {% now "Y年n月j日" %}
+                </span>
+
+                <span aria-hidden="true">·</span>
+
+                <span id="dashboard-clock">
+                    {% now "H:i:s" %}
+                </span>
+
+                <span aria-hidden="true">·</span>
+
+                <span>
+                    共 {{ dashboard_total_content }} 条核心内容
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="yuki-dashboard-orbit"
+            aria-hidden="true"
+        >
+            <span class="yuki-dashboard-orbit__ring"></span>
+            <span class="yuki-dashboard-orbit__avatar">Y</span>
+            <span class="yuki-dashboard-orbit__dot"></span>
+        </div>
+
+    </header>
+
+
+    <section class="yuki-dashboard-section">
+
+        <header class="yuki-section-heading">
+            <div>
+                <p>Overview</p>
+                <h2>内容概览</h2>
+            </div>
+
+            <span>
+                当前博客内容状态
+            </span>
+        </header>
+
+
+        <div class="yuki-stat-grid">
+
+            {% for stat in dashboard_stats %}
+                <a
+                    href="{{ stat.url }}"
+                    class="yuki-stat-card yuki-stat-card--{{ stat.tone }}"
+                >
+                    <span class="yuki-stat-card__icon">
+                        {{ stat.icon }}
+                    </span>
+
+                    <div>
+                        <strong>
+                            {{ stat.value }}
+                        </strong>
+
+                        <small>
+                            {{ stat.label }}
+                        </small>
+                    </div>
+
+                    <span
+                        class="yuki-stat-card__arrow"
+                        aria-hidden="true"
+                    >
+                        ↗
+                    </span>
+                </a>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <section class="yuki-dashboard-section">
+
+        <header class="yuki-section-heading">
+            <div>
+                <p>Quick Actions</p>
+                <h2>快捷创作</h2>
+            </div>
+
+            <span>
+                从这里开始新的记录
+            </span>
+        </header>
+
+
+        <div class="yuki-action-grid">
+
+            {% for action in dashboard_quick_actions %}
+                <a
+                    href="{{ action.url }}"
+                    class="yuki-action-card"
+                >
+                    <span class="yuki-action-card__icon">
+                        {{ action.icon }}
+                    </span>
+
+                    <div>
+                        <strong>
+                            {{ action.label }}
+                        </strong>
+
+                        <small>
+                            {{ action.description }}
+                        </small>
+                    </div>
+
+                    <b aria-hidden="true">→</b>
+                </a>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <div class="yuki-dashboard-columns">
+
+        <section class="yuki-dashboard-panel">
+
+            <header class="yuki-section-heading">
+                <div>
+                    <p>Recent Content</p>
+                    <h2>最近发布</h2>
+                </div>
+
+                <a href="{% url 'admin:blog_post_changelist' %}">
+                    查看全部
+                </a>
+            </header>
+
+
+            <div class="yuki-recent-list">
+
+                {% for item in dashboard_recent_content %}
+                    <a href="{{ item.url }}">
+
+                        <span
+                            class="yuki-content-type yuki-content-type--{{ item.type }}"
+                        >
+                            {{ item.type }}
+                        </span>
+
+                        <strong>
+                            {{ item.title|truncatechars:42 }}
+                        </strong>
+
+                        <time
+                            datetime="{{ item.date|date:'c' }}"
+                        >
+                            {{ item.date|timesince }}前
+                        </time>
+
+                        <span aria-hidden="true">›</span>
+
+                    </a>
+                {% empty %}
+                    <p class="yuki-empty-state">
+                        暂时没有已发布内容。
+                    </p>
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <section class="yuki-dashboard-panel">
+
+            <header class="yuki-section-heading">
+                <div>
+                    <p>Distribution</p>
+                    <h2>内容分布</h2>
+                </div>
+
+                <span>
+                    分类与专栏
+                </span>
+            </header>
+
+
+            <div class="yuki-distribution-list">
+
+                {% for item in dashboard_distribution %}
+                    <div class="yuki-distribution-item">
+
+                        <header>
+                            <div>
+                                <strong>{{ item.label }}</strong>
+                                <small>{{ item.kind }}</small>
+                            </div>
+
+                            <span>{{ item.value }}</span>
+                        </header>
+
+                        <div class="yuki-distribution-track">
+                            <span
+                                style="--distribution-width: {{ item.percent }}%;"
+                            ></span>
+                        </div>
+
+                    </div>
+                {% empty %}
+                    <p class="yuki-empty-state">
+                        暂时没有分类数据。
+                    </p>
+                {% endfor %}
+
+            </div>
+
+
+            <div class="yuki-draft-notice">
+
+                <span aria-hidden="true">✎</span>
+
+                <div>
+                    <strong>
+                        {{ dashboard_draft_count }}
+                    </strong>
+
+                    <small>
+                        条内容仍在草稿箱中等待完成
+                    </small>
+                </div>
+
+                <a href="{% url 'admin:blog_post_changelist' %}">
+                    去处理 →
+                </a>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <section class="yuki-dashboard-section">
+
+        <header class="yuki-section-heading">
+            <div>
+                <p>Management</p>
+                <h2>内容管理</h2>
+            </div>
+
+            <span>
+                Django Admin 模型入口
+            </span>
+        </header>
+
+
+        {% if app_list %}
+            <div class="yuki-admin-apps">
+
+                {% for app in app_list %}
+                    <section class="yuki-admin-app">
+
+                        <header>
+                            <div>
+                                <span>
+                                    {% if app.app_label == "blog" %}
+                                        B
+                                    {% elif app.app_label == "core" %}
+                                        C
+                                    {% else %}
+                                        A
+                                    {% endif %}
+                                </span>
+
+                                <h3>{{ app.name }}</h3>
+                            </div>
+
+                            <small>
+                                {{ app.models|length }} 个模块
+                            </small>
+                        </header>
+
+
+                        <div class="yuki-admin-app__models">
+
+                            {% for model in app.models %}
+                                <a
+                                    {% if model.admin_url %}
+                                        href="{{ model.admin_url }}"
+                                    {% endif %}
+                                >
+                                    <span>
+                                        {{ model.name }}
+                                    </span>
+
+                                    <small>
+                                        管理
+                                    </small>
+
+                                    <b aria-hidden="true">
+                                        →
+                                    </b>
+                                </a>
+                            {% endfor %}
+
+                        </div>
+
+                    </section>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <p class="yuki-empty-state">
+                当前账号没有模型管理权限。
+            </p>
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

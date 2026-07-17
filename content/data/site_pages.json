@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "about",
+    "title": "自述",
+    "subtitle": "关于站长的自我介绍、经历与长期关注的主题。",
+    "url": "/pages/about/"
+  },
+  {
+    "slug": "persona",
+    "title": "人设",
+    "subtitle": "用于整理公开形象、表达方式与站点中的角色设定。",
+    "url": "/pages/persona/"
+  },
+  {
+    "slug": "soul",
+    "title": "灵魂",
+    "subtitle": "收藏价值观、偏好，以及那些构成内在世界的片段。",
+    "url": "/pages/soul/"
+  },
+  {
+    "slug": "site",
+    "title": "此站点",
+    "subtitle": "介绍博客的定位、内容结构、技术栈与使用方式。",
+    "url": "/pages/site/"
+  },
+  {
+    "slug": "history",
+    "title": "历史",
+    "subtitle": "记录站点与个人内容长期积累下来的时间轨迹。",
+    "url": "/pages/history/"
+  },
+  {
+    "slug": "changelog",
+    "title": "迭代",
+    "subtitle": "记录博客功能、视觉与内容结构的更新。",
+    "url": "/pages/changelog/"
+  },
+  {
+    "slug": "guestbook",
+    "title": "留言",
+    "subtitle": "用于留下问候、建议或想交流的话题。",
+    "url": "/pages/guestbook/"
+  },
+  {
+    "slug": "friends",
+    "title": "关于友链",
+    "subtitle": "友链说明、交换原则与站点收录信息。",
+    "url": "/pages/friends/"
+  },
+  {
+    "slug": "consulting",
+    "title": "一对一咨询",
+    "subtitle": "说明可交流的主题、合作方式与联系流程。",
+    "url": "/pages/consulting/"
+  },
+  {
+    "slug": "sponsor",
+    "title": "赞助",
+    "subtitle": "用于说明支持站点持续维护与创作的方式。",
+    "url": "/pages/sponsor/"
+  }
+]

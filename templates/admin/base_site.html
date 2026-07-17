@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if subtitle %}
+        {{ subtitle }} |
+    {% endif %}
+    {{ title }} | Yuki Blog Console
+{% endblock %}
+
+{% block branding %}
+{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block nav-global %}
+    <a
+        class="yuki-view-site"
+        href="{% url 'core:home' %}"
+        target="_blank"
+        rel="noopener"
+    >
+        查看网站 ↗
+    </a>
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <link
+        rel="stylesheet"
+        href="{% static 'admin_custom/css/base.css' %}"
+    >
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    >
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+
+    <script
+        src="{% static 'admin_custom/js/tag-selector.js' %}"
+        defer
+    ></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+        defer
+    ></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+        defer
+    ></script>
+    <script
+        src="{% static 'admin_custom/js/markdown-editor.js' %}"
+        defer
+    ></script>
+{% endblock %}

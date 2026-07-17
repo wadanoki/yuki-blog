@@ -1,0 +1,78 @@
+<div class="tag-widget-wrapper">
+    <div class="tag-button-list">
+        {% for group, options, index in widget.optgroups %}
+            {% for option in options %}
+                {% include option.template_name with widget=option %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.tag-widget-wrapper {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.tag-button-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 4px 0;
+    box-sizing: border-box;
+}
+
+.tag-button-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    height: 30px;
+    padding: 0 11px;
+    margin: 0;
+    border: 1px solid #d8d8d8;
+    border-radius: 7px;
+    background: #fff;
+    color: #444;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.18s ease;
+}
+
+.tag-button-item:hover {
+    color: #d9485f;
+    border-color: #e78a99;
+    background: #fff7f8;
+}
+
+.tag-button-item input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tag-button-item:has(input:checked) {
+    color: #fff;
+    border-color: #df5a70;
+    background: #df5a70;
+    box-shadow: 0 3px 10px rgba(223, 90, 112, 0.2);
+}
+
+.tag-button-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+</style>

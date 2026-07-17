@@ -1,0 +1,108 @@
+@layer components {
+    .post-signature {
+        display: flex;
+        min-height: 120px;
+        margin-top: 42px;
+        align-items: center;
+        justify-content: flex-end;
+        overflow: visible;
+    }
+
+    .post-signature__svg {
+        width: min(300px, 72vw);
+        height: auto;
+        overflow: visible;
+        transform: rotate(-3deg);
+    }
+
+    .post-signature__stroke {
+        fill: none;
+        stroke: var(--color-neutral-10);
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+
+        opacity: 0;
+        transition:
+            opacity 180ms ease;
+    }
+
+    .post-signature__stroke--accent {
+        stroke-width: 1.7;
+        opacity: 0;
+    }
+
+    .post-signature.is-visible
+    .post-signature__stroke--main {
+        opacity: 1;
+        animation:
+            signature-draw 1.65s
+            cubic-bezier(0.65, 0, 0.35, 1)
+            forwards;
+    }
+
+    .post-signature.is-visible
+    .post-signature__stroke--accent {
+        opacity: 0.62;
+        animation:
+            signature-draw 0.75s
+            1.28s
+            cubic-bezier(0.22, 1, 0.36, 1)
+            forwards;
+    }
+
+    .post-signature.is-visible
+    .post-signature__svg {
+        animation:
+            signature-settle 520ms
+            1.55s
+            cubic-bezier(0.22, 1, 0.36, 1)
+            both;
+    }
+}
+
+@keyframes signature-draw {
+    from {
+        stroke-dashoffset: 1;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes signature-settle {
+    from {
+        opacity: 0.7;
+        transform:
+            rotate(-3deg)
+            translateY(3px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            rotate(-3deg)
+            translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-signature__stroke {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        animation: none !important;
+    }
+
+    .post-signature__stroke--accent {
+        opacity: 0.62;
+    }
+
+    .post-signature__svg {
+        animation: none !important;
+    }
+}

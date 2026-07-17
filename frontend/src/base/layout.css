@@ -1,0 +1,32 @@
+@layer components {
+    .site-shell {
+        width: min(calc(100% - 32px), 1180px);
+        margin-inline: auto;
+    }
+
+    .content-shell {
+        width: min(calc(100% - 32px), 980px);
+        margin-inline: auto;
+    }
+
+    .reading-shell {
+        width: min(calc(100% - 32px), 720px);
+        margin-inline: auto;
+    }
+
+    .paper-panel {
+        background: color-mix(in srgb, var(--color-neutral-1) 82%, transparent);
+        border: 1px solid var(--color-border);
+        backdrop-filter: blur(16px);
+    }
+
+    .quiet-link {
+        color: var(--color-neutral-7);
+        transition: color 220ms var(--ease-out),
+            background-color 220ms var(--ease-out);
+    }
+
+    .quiet-link:hover {
+        color: var(--color-neutral-10);
+    }
+}

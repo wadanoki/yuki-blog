@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@import "@yohaku/design-system/tokens.css";
+@import "./base/reset.css";
+@import "./base/layout.css";
+@import "./base/animations.css";
+@import "./components/navbar.css";
+@import "./components/timeline.css";
+@import "./components/effects.css";
+@import "./components/tag-cloud.css";
+@import "./pages/post-detail.css";
+@import "./components/markdown.css";
+@import "./components/reading-navigator.css";
+@import "./components/signature.css";
+@import "./pages/note-list.css";
+@import "./pages/note-detail.css";
+@import "./pages/note-collection-list.css";
+@import "./pages/timeline.css";
+@import "./pages/thought-list.css";
+@import "./components/more-menu.css";
+@import "./pages/project-list.css";
+@import "./pages/quote-list.css";
+@import "./pages/site-page.css";
+
+@source "../../../templates/**/*.html";
+@source "../../../core/**/*.html";
+@source "../../../blog/**/*.html";
+
+@custom-variant hover (&:hover);
+@custom-variant dark (&:where(.dark, .dark *));
+

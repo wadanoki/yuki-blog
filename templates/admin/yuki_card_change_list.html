@@ -1,0 +1,149 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link
+        rel="stylesheet"
+        href="{% static 'admin/css/changelists.css' %}"
+    >
+{% endblock %}
+
+{% block bodyclass %}
+    {{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list yuki-card-list
+{% endblock %}
+
+{% block coltype %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+        <section
+            class="yuki-card-board"
+            id="changelist"
+        >
+            <div class="yuki-card-board__header">
+                <div>
+                    <p class="yuki-card-board__eyebrow">
+                        {{ yuki_card_eyebrow }}
+                    </p>
+                    <h2>
+                        {{ yuki_card_heading }}
+                    </h2>
+                </div>
+
+                <div class="yuki-card-board__header-actions">
+                    <span class="yuki-card-board__count">
+                        {{ cl.result_count }} {{ cl.opts.verbose_name_plural }}
+                    </span>
+
+                    {% block object-tools %}
+                        <ul class="object-tools yuki-card-board__tools">
+                            {% block object-tools-items %}
+                                {% change_list_object_tools %}
+                            {% endblock %}
+                        </ul>
+                    {% endblock %}
+                </div>
+            </div>
+
+            {% if yuki_cards %}
+                <div class="yuki-card-grid">
+                    {% for card in yuki_cards %}
+                        <article class="yuki-card">
+                            <a
+                                class="yuki-card__main"
+                                href="{{ card.change_url }}"
+                                aria-label="编辑 {{ card.title }}"
+                            >
+                                <div class="yuki-card__topline">
+                                    <span class="yuki-card__category">
+                                        {% if card.category %}
+                                            {{ card.category }}
+                                        {% else %}
+                                            {{ cl.opts.verbose_name }}
+                                        {% endif %}
+                                    </span>
+
+                                    {% for badge in card.badges %}
+                                        <span class="yuki-card__status yuki-card__status--{{ badge.modifier }}">
+                                            {{ badge.value }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+
+                                <h3>
+                                    {{ card.title }}
+                                </h3>
+
+                                {% if card.excerpt %}
+                                    <p class="yuki-card__excerpt">
+                                        {{ card.excerpt|truncatechars:128 }}
+                                    </p>
+                                {% else %}
+                                    <p class="yuki-card__excerpt is-empty">
+                                        暂无摘要
+                                    </p>
+                                {% endif %}
+
+                                {% if card.meta %}
+                                    <div class="yuki-card__meta">
+                                        {% for item in card.meta %}
+                                            <span>
+                                                {{ item.label }} {{ item.value }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <div class="yuki-card__tags">
+                                    {% for tag in card.tags %}
+                                        <span>
+                                            #{{ tag }}
+                                        </span>
+                                    {% empty %}
+                                        <span>
+                                            点击卡片编辑
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </a>
+
+                            <div class="yuki-card__actions">
+                                {% for flag in card.flags %}
+                                    <span class="yuki-card__flag">
+                                        {{ flag }}
+                                    </span>
+                                {% endfor %}
+
+                                {% if card.can_delete %}
+                                    <a
+                                        class="yuki-card__delete"
+                                        href="{{ card.delete_url }}"
+                                        aria-label="删除 {{ card.title }}"
+                                    >
+                                        删除
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="yuki-card-empty">
+                    <h2>
+                        还没有{{ cl.opts.verbose_name_plural }}
+                    </h2>
+                    <p>
+                        新建后，它会出现在这里。
+                    </p>
+                </div>
+            {% endif %}
+
+            {% block pagination %}
+                {% pagination cl %}
+            {% endblock %}
+        </section>
+    </div>
+{% endblock %}

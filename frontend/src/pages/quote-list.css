@@ -1,0 +1,163 @@
+@layer components {
+    .quote-page {
+        position: relative;
+        min-height: 100vh;
+        padding: 112px 0 130px;
+        overflow: hidden;
+    }
+
+    .quote-shell {
+        position: relative;
+        z-index: 1;
+        width: min(calc(100% - 48px), 1280px);
+        margin-inline: auto;
+    }
+
+    .quote-header {
+        margin-bottom: 72px;
+    }
+
+    .quote-title-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .quote-title-row h1 {
+        color: var(--color-neutral-10);
+        font-size: clamp(42px, 5vw, 58px);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .quote-rss-icon {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 7px;
+        background: var(--color-neutral-2);
+        color: var(--color-accent);
+        font-size: 13px;
+    }
+
+    .quote-header > p {
+        margin-top: 16px;
+        color: var(--color-neutral-6);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 14px;
+    }
+
+    .quote-grid {
+        columns: 2;
+        column-gap: 18px;
+    }
+
+    .quote-card {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        margin: 0 0 18px;
+        padding: 30px 28px 22px;
+        break-inside: avoid;
+        border: 1px solid var(--color-neutral-3);
+        border-radius: 14px;
+        background:
+            linear-gradient(
+                130deg,
+                color-mix(
+                    in srgb,
+                    var(--color-accent) 5%,
+                    var(--color-neutral-1)
+                ),
+                var(--color-neutral-1) 58%
+            );
+        box-shadow:
+            0 8px 22px
+            color-mix(
+                in srgb,
+                var(--color-neutral-10) 4%,
+                transparent
+            );
+        transition:
+            border-color 180ms ease,
+            box-shadow 180ms ease,
+            transform 180ms ease;
+    }
+
+    .quote-card:hover {
+        border-color:
+            color-mix(
+                in srgb,
+                var(--color-accent) 24%,
+                var(--color-neutral-3)
+            );
+        box-shadow:
+            0 14px 34px
+            color-mix(
+                in srgb,
+                var(--color-neutral-10) 6%,
+                transparent
+            );
+        transform: translateY(-2px);
+    }
+
+    .quote-mark {
+        position: absolute;
+        top: 8px;
+        left: 24px;
+        color:
+            color-mix(
+                in srgb,
+                var(--color-accent) 24%,
+                transparent
+            );
+        font-family: Georgia, serif;
+        font-size: 54px;
+        font-weight: 700;
+        line-height: 1;
+        pointer-events: none;
+    }
+
+    .quote-card blockquote {
+        position: relative;
+        z-index: 1;
+        color: var(--color-neutral-9);
+        font-family:
+            "Noto Serif SC",
+            "Songti SC",
+            serif;
+        font-size: 15px;
+        line-height: 1.95;
+    }
+
+    .quote-card-footer {
+        display: grid;
+        margin-top: 20px;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 14px;
+        align-items: end;
+    }
+
+    .quote-card-footer time {
+        color: var(--color-neutral-5);
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .quote-card-footer p {
+        color: var(--color-neutral-5);
+        font-size: 11px;
+        line-height: 1.7;
+        text-align: right;
+    }
+
+    .quote-empty {
+        padding: 100px 0;
+        color: var(--color-neutral-5);
+        text-align: center;
+    }
+}

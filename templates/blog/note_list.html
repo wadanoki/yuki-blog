@@ -1,0 +1,265 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    手记 - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    记录生活、旅途、阶段总结与散落的记忆。
+{% endblock %}
+
+{% block content %}
+
+<section class="note-index-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="note-index-shell">
+
+        {% if featured_note %}
+
+            <article class="featured-note-card">
+
+                {% if featured_note.collection %}
+                    <a
+                        href="{{ featured_note.collection.get_absolute_url }}"
+                        class="featured-note-ribbon"
+                    >
+                        {{ featured_note.collection.name }}
+                    </a>
+                {% endif %}
+
+
+                {% if featured_note.cover %}
+                    <a
+                        href="{{ featured_note.get_absolute_url }}"
+                        class="featured-note-cover"
+                    >
+                        <img
+                            src="{{ featured_note.cover.url }}"
+                            alt="{{ featured_note.title }}"
+                        >
+                    </a>
+                {% endif %}
+
+
+                <div class="featured-note-body">
+
+                    <div class="featured-note-meta">
+
+                        {% for tag in featured_note.tags.all|slice:":1" %}
+                            <span>
+                                • {{ tag.name }}
+                            </span>
+                        {% endfor %}
+
+                        <span aria-hidden="true">|</span>
+
+                        <time
+                            datetime="{{ featured_note.published_at|date:'c' }}"
+                        >
+                            ◷
+                            {{ featured_note.published_at|date:"Y年n月j日 D" }}
+                        </time>
+
+                    </div>
+
+
+                    <h1 class="featured-note-title">
+                        <a href="{{ featured_note.get_absolute_url }}">
+                            {{ featured_note.title }}
+                        </a>
+                    </h1>
+
+
+                    {% if featured_note.excerpt %}
+                        <p class="featured-note-excerpt">
+                            {{ featured_note.excerpt }}
+                        </p>
+                    {% else %}
+                        <p class="featured-note-excerpt">
+                            {{ featured_note.content|striptags|truncatechars:360 }}
+                        </p>
+                    {% endif %}
+
+
+                    <footer class="featured-note-footer">
+
+                        <span class="note-letter-number">
+                            YUKI · LETTER №{{ featured_note.pk|stringformat:"03d" }}
+                        </span>
+
+                        <a
+                            href="{{ featured_note.get_absolute_url }}"
+                            class="note-read-more"
+                        >
+                            阅读全文 →
+                        </a>
+
+                    </footer>
+
+                </div>
+
+            </article>
+
+        {% endif %}
+
+
+        <div class="note-section-divider">
+
+            <span></span>
+
+            <p>更早的手记</p>
+
+            <span></span>
+
+        </div>
+
+
+        {% regroup notes by published_at.year as notes_by_year %}
+
+
+        <div class="note-year-groups">
+
+            {% for year_group in notes_by_year %}
+
+                <section class="note-year-section">
+
+                    <header class="note-year-header">
+
+                        <div>
+                            <p>ANNO</p>
+
+                            <h2>
+                                {{ year_group.grouper }}
+                            </h2>
+                        </div>
+
+                        <span>
+                            {{ year_group.list|length }}
+                            LETTERS
+                        </span>
+
+                    </header>
+
+
+                    <div class="note-year-list">
+
+                        {% for note in year_group.list %}
+
+                            <article class="note-timeline-row">
+
+                                <time
+                                    class="note-timeline-date"
+                                    datetime="{{ note.published_at|date:'c' }}"
+                                >
+                                    <strong>
+                                        {{ note.published_at|date:"d" }}
+                                    </strong>
+
+                                    <span>
+                                        {{ note.published_at|date:"n月" }}
+                                    </span>
+
+                                    <small>
+                                        {{ note.published_at|date:"D" }}
+                                    </small>
+                                </time>
+
+
+                                <div class="note-list-card">
+
+                                    {% if note.cover %}
+                                        <a
+                                            href="{{ note.get_absolute_url }}"
+                                            class="note-list-cover"
+                                        >
+                                            <img
+                                                src="{{ note.cover.url }}"
+                                                alt="{{ note.title }}"
+                                                loading="lazy"
+                                            >
+                                        </a>
+                                    {% endif %}
+
+
+                                    <div class="note-list-card-body">
+
+                                        <div class="note-list-labels">
+
+                                            {% if note.collection %}
+                                                <a
+                                                    href="{{ note.collection.get_absolute_url }}"
+                                                    class="note-collection-label"
+                                                >
+                                                    {{ note.collection.name }}
+                                                </a>
+                                            {% endif %}
+
+                                            {% for tag in note.tags.all|slice:":2" %}
+                                                <span>
+                                                    {{ tag.name }}
+                                                </span>
+                                            {% endfor %}
+
+                                        </div>
+
+
+                                        <h3>
+                                            <a href="{{ note.get_absolute_url }}">
+                                                {{ note.title }}
+                                            </a>
+                                        </h3>
+
+
+                                        <p>
+                                            {% if note.excerpt %}
+                                                {{ note.excerpt|truncatechars:150 }}
+                                            {% else %}
+                                                {{ note.content|striptags|truncatechars:150 }}
+                                            {% endif %}
+                                        </p>
+
+
+                                        <footer>
+
+                                            <span>
+                                                LETTER №{{ note.pk|stringformat:"03d" }}
+                                            </span>
+
+                                            <a href="{{ note.get_absolute_url }}">
+                                                阅读全文 →
+                                            </a>
+
+                                        </footer>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% empty %}
+
+                <div class="note-empty-state">
+                    暂时没有更早的手记。
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

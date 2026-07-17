@@ -1,0 +1,337 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="description"
+        content="{% block description %}Yuki 的个人博客，记录技术、生活、阅读与思考。{% endblock %}"
+    >
+
+    <title>
+        {% block title %}Yuki Blog{% endblock %}
+    </title>
+
+    <script>
+        /*
+         * 在页面绘制前恢复主题，避免深色模式闪烁。
+         */
+        (() => {
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia(
+                "(prefers-color-scheme: dark)"
+            ).matches;
+
+            if (
+                savedTheme === "dark"
+                || (!savedTheme && prefersDark)
+            ) {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'dist/app.css' %}"
+    >
+
+    <!-- 1. 全局背景、樱花画布与磨砂玻璃导航栏的样式 -->
+    <style>
+        /*
+     * 所有页面共用的基础设置
+     */
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-attachment: fixed !important;
+
+        transition:
+            background-image 0.3s ease,
+            background-color 0.3s ease;
+    }
+
+
+    /*
+     * 首页背景
+     *
+     * 首页继续使用原来的：
+     * static/images/background.jpg
+     */
+    body.page-home {
+        background-image:
+            linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.25),
+                rgba(255, 255, 255, 0.65)
+            ),
+            url("{% static 'images/background.jpg' %}") !important;
+
+        background-position:
+            center center,
+            center center !important;
+    }
+
+
+    /*
+     * 除首页外的所有前台页面
+     *
+     * 使用新图片：
+     * static/images/subpage-background.png
+     */
+    body.page-inner {
+        background-image:
+            linear-gradient(
+                to bottom,
+                rgba(255, 250, 248, 0.10),
+                rgba(255, 250, 248, 0.28)
+            ),
+            url("{% static 'images/subpage-background.png' %}") !important;
+
+        /*
+         * 图片中的人物在右侧，因此使用 right center，
+         * 防止浏览器裁剪时把人物右侧裁掉。
+         */
+        background-position:
+            center center,
+            right center !important;
+    }
+
+
+    /*
+     * 首页深色模式
+     */
+    .dark body.page-home {
+        background-image:
+            linear-gradient(
+                to bottom,
+                rgba(25, 25, 30, 0.45),
+                rgba(25, 25, 30, 0.72)
+            ),
+            url("{% static 'images/background.jpg' %}") !important;
+
+        background-position:
+            center center,
+            center center !important;
+    }
+
+
+    /*
+     * 其他页面深色模式
+     */
+    .dark body.page-inner {
+        background-image:
+            linear-gradient(
+                to bottom,
+                rgba(25, 22, 28, 0.45),
+                rgba(25, 22, 28, 0.68)
+            ),
+            url("{% static 'images/subpage-background.png' %}") !important;
+
+        background-position:
+            center center,
+            right center !important;
+    }
+
+
+
+        /* 樱花 Canvas 置底：层级设为 1，确保不遮挡任何文字和点击事件 */
+        #global-sakura-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 主体内容位于樱花画布上方。导航栏单独建立更高的层叠上下文，
+           避免正文覆盖下拉菜单并拦截鼠标事件。 */
+        main, footer, .main-content {
+            position: relative;
+            z-index: 10;
+            background: transparent !important;
+        }
+
+        #site-header {
+            position: fixed !important;
+            z-index: 100 !important;
+            overflow: visible !important;
+            background: transparent !important;
+        }
+
+        /* ==========================================================================
+           全局导航栏 (navbar.html) 的半透明磨砂玻璃样式覆盖
+           ========================================================================== */
+        header nav, .fixed.top-0 {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* 胶囊外壳样式（若 navbar 中有对应的容器类，可自动匹配） */
+        nav.flex, [role="navigation"], .header-nav-wrapper {
+            background: rgba(255, 255, 255, 0.22) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+            box-shadow: 0 8px 32px 0 rgba(244, 143, 177, 0.08), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+            border-radius: 9999px !important;
+            padding: 6px 10px !important;
+            gap: 6px !important;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .dark nav.flex, .dark [role="navigation"] {
+            background: rgba(30, 30, 30, 0.35) !important;
+            border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* 导航子项 */
+        nav.flex a, [role="navigation"] a {
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            letter-spacing: 0.05em !important;
+            color: rgba(74, 85, 104, 0.85) !important;
+            padding: 6px 14px !important;
+            border-radius: 9999px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .dark nav.flex a, .dark [role="navigation"] a {
+            color: rgba(229, 231, 235, 0.85) !important;
+        }
+
+        /* 导航子项 Hover 效果 */
+        nav.flex a:hover, [role="navigation"] a:hover {
+            color: #e91e63 !important;
+            background: rgba(255, 255, 255, 0.5) !important;
+            transform: translateY(-1px);
+        }
+
+        .dark nav.flex a:hover, .dark [role="navigation"] a:hover {
+            color: #f48fb1 !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body
+    class="
+        text-neutral-9
+        antialiased
+        {% if request.resolver_match.view_name == 'core:home' %}
+            page-home
+        {% else %}
+            page-inner
+        {% endif %}
+    "
+>
+
+    <!-- 2. 全局樱花画布（不干扰点击） -->
+    <canvas id="global-sakura-canvas"></canvas>
+
+    {% include "components/navbar.html" %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "components/footer.html" %}
+
+    <script
+        type="module"
+        src="{% static 'js/app.js' %}"
+    ></script>
+
+    <!-- 3. 樱花生成与运动逻辑脚本 -->
+    <script>
+        const canvas = document.getElementById('global-sakura-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const sakuraArray = [];
+        const maxSakura = 40; // 维持40片樱花，全局轻量飞舞，不影响阅读体验
+
+        class Sakura {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height - height;
+                this.r = Math.random() * 8 + 6;
+                this.d = Math.random() * maxSakura;
+                this.speedX = Math.random() * 1.5 + 0.5;
+                this.speedY = Math.random() * 1.0 + 0.8;
+                this.deg = Math.random() * 360;
+                this.speedDeg = Math.random() * 0.02 + 0.01;
+            }
+
+            draw() {
+                ctx.beginPath();
+                const radian = this.deg * Math.PI / 180;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(radian);
+                
+                const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.r);
+                gradient.addColorStop(0, 'rgba(255, 183, 197, 0.95)');
+                gradient.addColorStop(0.8, 'rgba(255, 153, 172, 0.7)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = gradient;
+                
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(-this.r, -this.r, -this.r * 1.5, this.r / 3, 0, this.r * 1.5);
+                ctx.bezierCurveTo(this.r * 1.5, this.r / 3, this.r, -this.r, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX + Math.sin(this.d * 0.05) * 0.5;
+                this.deg += this.speedDeg;
+
+                if (this.y > height || this.x > width) {
+                    this.y = -20;
+                    this.x = Math.random() * width;
+                    this.speedY = Math.random() * 1.0 + 0.8;
+                    this.speedX = Math.random() * 1.5 + 0.5;
+                }
+            }
+        }
+
+        for (let i = 0; i < maxSakura; i++) {
+            sakuraArray.push(new Sakura());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            sakuraArray.forEach(sakura => {
+                sakura.update();
+                sakura.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

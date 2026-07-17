@@ -1,0 +1,107 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    一言 - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    散落在时间里的言语碎片。
+{% endblock %}
+
+{% block content %}
+
+<section class="quote-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="quote-shell">
+
+        <header class="quote-header">
+
+            <div class="quote-title-row">
+
+                <h1>一言</h1>
+
+                <span
+                    class="quote-rss-icon"
+                    aria-hidden="true"
+                    title="RSS"
+                >
+                    ◔
+                </span>
+
+            </div>
+
+            <p>
+                言语的碎片。
+            </p>
+
+        </header>
+
+
+        <div class="quote-grid">
+
+            {% for quote in quotes %}
+
+                <article class="quote-card">
+
+                    <span
+                        class="quote-mark"
+                        aria-hidden="true"
+                    >
+                        “
+                    </span>
+
+
+                    <blockquote>
+                        {{ quote.content|linebreaksbr }}
+                    </blockquote>
+
+
+                    <footer class="quote-card-footer">
+
+                        <time
+                            datetime="{{ quote.published_at|date:'c' }}"
+                        >
+                            {{ quote.published_at|date:"Y年n月j日 l" }}
+                        </time>
+
+
+                        {% if quote.source or quote.author %}
+                            <p>
+                                {% if quote.source %}
+                                    {{ quote.source }}
+                                {% endif %}
+
+                                {% if quote.source and quote.author %}
+                                    ，
+                                {% endif %}
+
+                                {% if quote.author %}
+                                    作者：{{ quote.author }}
+                                {% endif %}
+                            </p>
+                        {% endif %}
+
+                    </footer>
+
+                </article>
+
+            {% empty %}
+
+                <p class="quote-empty">
+                    暂时还没有公开的一言。
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

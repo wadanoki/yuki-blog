@@ -1,0 +1,254 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    思考 - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    短暂的念头、日常观察与值得留下的片段。
+{% endblock %}
+
+{% block content %}
+
+<section class="thought-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="thought-page-shell">
+
+        <header class="thought-page-header">
+
+            <div class="thought-page-title-row">
+
+                <h1>思考</h1>
+
+                <a
+                    href="#"
+                    class="thought-rss-link"
+                    aria-label="思考 RSS"
+                    title="RSS"
+                >
+                    ◔
+                </a>
+
+            </div>
+
+            <p>
+                感君倾耳。
+            </p>
+
+        </header>
+
+
+        <div class="thought-feed">
+
+            {% for thought in thoughts %}
+
+                <article class="thought-card">
+
+                    <header class="thought-card-header">
+
+                        <strong>
+                            {{ thought.author.username }}
+                        </strong>
+
+                        <time
+                            datetime="{{ thought.published_at|date:'c' }}"
+                            title="{{ thought.published_at|date:'Y年n月j日 H:i' }}"
+                        >
+                            {{ thought.published_at|timesince }}前
+                        </time>
+
+                    </header>
+
+
+                    {% if thought.title %}
+                        <h2 class="thought-card-title">
+                            {{ thought.title }}
+                        </h2>
+                    {% endif %}
+
+
+                    {% if thought.content %}
+                        <div class="thought-card-content">
+                            {{ thought.content|linebreaks }}
+                        </div>
+                    {% endif %}
+
+
+                    {% if thought.image %}
+                        <figure class="thought-image">
+                            <img
+                                src="{{ thought.image.url }}"
+                                alt="{{ thought.title|default:'思考配图' }}"
+                                loading="lazy"
+                            >
+                        </figure>
+                    {% endif %}
+
+
+                    {% if thought.source_title or thought.source_url %}
+
+                        {% if thought.source_url %}
+                            <a
+                                href="{{ thought.source_url }}"
+                                class="thought-source-card"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                        {% else %}
+                            <div class="thought-source-card">
+                        {% endif %}
+
+                            <div class="thought-source-content">
+
+                                {% if thought.source_title %}
+                                    <strong>
+                                        {{ thought.source_title }}
+                                    </strong>
+                                {% endif %}
+
+                                {% if thought.source_description %}
+                                    <p>
+                                        {{ thought.source_description }}
+                                    </p>
+                                {% endif %}
+
+                                {% if thought.source_url %}
+                                    <small>
+                                        {{ thought.source_url|truncatechars:55 }}
+                                    </small>
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if thought.source_image %}
+                                <img
+                                    src="{{ thought.source_image.url }}"
+                                    alt="{{ thought.source_title }}"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+
+                        {% if thought.source_url %}
+                            </a>
+                        {% else %}
+                            </div>
+                        {% endif %}
+
+                    {% endif %}
+
+
+                    {% if thought.topic %}
+                        <div class="thought-topic">
+
+                            <span>发表于：</span>
+
+                            <span aria-hidden="true">ↄ</span>
+
+                            <strong>
+                                {{ thought.topic }}
+                            </strong>
+
+                        </div>
+                    {% endif %}
+
+
+                    <footer class="thought-card-footer">
+
+                        <div class="thought-actions">
+
+                            <button
+                                type="button"
+                                aria-label="喜欢"
+                                title="喜欢"
+                            >
+                                ♡
+                                <span>{{ thought.like_count }}</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                aria-label="收藏"
+                                title="收藏"
+                            >
+                                ♧
+                                <span>{{ thought.favorite_count }}</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                aria-label="评论"
+                                title="评论"
+                            >
+                                ▢
+                                <span>{{ thought.comment_count }}</span>
+                            </button>
+
+                        </div>
+
+
+                        {% if thought.source_url %}
+                            <a
+                                href="{{ thought.source_url }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="thought-view-link"
+                            >
+                                查看 →
+                            </a>
+                        {% endif %}
+
+                    </footer>
+
+                </article>
+
+            {% empty %}
+
+                <div class="thought-empty">
+                    暂时还没有公开的思考。
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% if is_paginated %}
+
+            <nav
+                class="thought-pagination"
+                aria-label="思考分页"
+            >
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">
+                        ← 上一页
+                    </a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+
+                <span>
+                    {{ page_obj.number }}
+                    /
+                    {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">
+                        下一页 →
+                    </a>
+                {% endif %}
+            </nav>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

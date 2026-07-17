@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    {{ memory.title }} - Yuki Blog
+{% endblock %}
+
+{% block content %}
+
+<section class="site-shell pb-28 pt-32">
+
+    <header>
+        <p class="text-caption-10 text-neutral-5">
+            回忆
+        </p>
+
+        <h1 class="mt-4 font-serif text-display-36 text-neutral-10">
+            {{ memory.title }}
+        </h1>
+
+        <time class="mt-4 block text-copy-13 text-neutral-5">
+            {{ memory.happened_at|date:"Y年n月j日" }}
+        </time>
+    </header>
+
+    {% if memory.cover %}
+        <img
+            class="mt-10 w-full rounded-xl"
+            src="{{ memory.cover.url }}"
+            alt="{{ memory.title }}"
+        >
+    {% endif %}
+
+    <article class="article-prose mt-12">
+        {{ memory.content|linebreaks }}
+    </article>
+
+</section>
+
+{% endblock %}

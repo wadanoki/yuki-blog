@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "技术",
+    "slug": "technology",
+    "description": "记录编程和技术学习内容",
+    "url": "/blog/category/technology/"
+  },
+  {
+    "id": 2,
+    "name": "文学",
+    "slug": "books",
+    "description": "",
+    "url": "/blog/category/books/"
+  }
+]

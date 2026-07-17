@@ -1,0 +1,10 @@
+<label class="tag-button-item">
+    <input
+        type="{{ widget.type }}"
+        name="{{ widget.name }}"
+        value="{{ widget.value|stringformat:'s' }}"
+        {% include "django/forms/widgets/attrs.html" %}
+        {% if widget.selected %}checked{% endif %}
+    >
+    <span class="tag-button-text">{{ widget.label }}</span>
+</label>

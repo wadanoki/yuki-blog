@@ -1,0 +1,232 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    时光 - Yuki Blog
+{% endblock %}
+
+{% block content %}
+
+<section class="timeline-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="timeline-page-shell">
+
+        <header class="timeline-summary">
+
+            <div>
+                <p class="timeline-eyebrow">
+                    {% if selected_type == "memory" %}
+                        回忆
+                    {% else %}
+                        时间线
+                    {% endif %}
+                </p>
+
+                <div class="timeline-total">
+                    <strong>{{ timeline_count }}</strong>
+
+                    <span>
+                        篇，
+                        {% if selected_type == "memory" %}
+                            值得回味
+                        {% else %}
+                            再接再厉
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if selected_type != "memory" %}
+                    <div class="timeline-stat-grid">
+
+                        <div>
+                            <strong>{{ day_of_year }}</strong>
+                            <span>今年第几天</span>
+                        </div>
+
+                        <div>
+                            <strong id="year-progress">
+    {{ year_progress|floatformat:0 }}%
+</strong>
+<span>年度进度</span>
+                        </div>
+
+                        <div>
+                            <strong id="today-progress">
+    {{ day_progress|floatformat:2 }}%
+</strong>
+<span>今日进度</span>
+                        </div>
+
+                    </div>
+
+                    <p class="timeline-motto">
+                        活在当下，珍惜眼下
+                    </p>
+                {% endif %}
+            </div>
+
+
+            <nav
+    class="timeline-filter-nav"
+    aria-label="时间线分类"
+>
+    <a
+        href="{% url 'blog:timeline' %}"
+        class="{% if selected_type == 'all' %}is-active{% endif %}"
+    >
+        全部
+    </a>
+
+    <a
+        href="{% url 'blog:timeline' %}?type=note"
+        class="{% if selected_type == 'note' %}is-active{% endif %}"
+    >
+        手记
+    </a>
+
+    <a
+        href="{% url 'blog:timeline' %}?type=post"
+        class="{% if selected_type == 'post' %}is-active{% endif %}"
+    >
+        文稿
+    </a>
+
+    <a
+        href="{% url 'blog:timeline' %}?type=memory"
+        class="{% if selected_type == 'memory' %}is-active{% endif %}"
+    >
+        回忆
+    </a>
+</nav>
+
+        </header>
+
+
+        <div class="timeline-year-groups">
+
+            {% for year_group in timeline_groups %}
+
+                <section class="timeline-year-group">
+
+                    <header>
+    <h2>{{ year_group.year }}</h2>
+
+    <span>
+        {{ year_group.count }} 篇
+    </span>
+</header>
+
+
+                    {% for month_group in year_group.months %}
+
+                        <section class="timeline-month-group">
+
+                            <h3>
+                                {{ month_group.month_cn }}
+                                ·
+                                {{ month_group.month_en }}
+                            </h3>
+
+
+                            <div class="timeline-entry-list">
+
+                                {% for item in month_group.items %}
+
+                                    <article class="timeline-entry">
+
+                                        <time
+                                            datetime="{{ item.date|date:'c' }}"
+                                        >
+                                            {{ item.date|date:"d" }}
+                                        </time>
+
+
+                                        <a href="{{ item.url }}">
+                                            {{ item.title }}
+                                        </a>
+
+
+                                        <span class="timeline-entry-meta">
+
+                                            {% if item.is_bookmarked %}
+                                                <span
+                                                    class="timeline-bookmark"
+                                                    aria-label="重点回忆"
+                                                >
+                                                    ♦
+                                                </span>
+                                            {% endif %}
+
+                                            {{ item.meta }}
+
+                                        </span>
+
+                                    </article>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </section>
+
+                    {% endfor %}
+
+                </section>
+
+            {% empty %}
+
+                <p class="note-empty-state">
+                    该分类暂时没有内容。
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        {% if is_paginated %}
+
+    <nav
+        class="timeline-pagination"
+        aria-label="时间线分页"
+    >
+
+        {% if page_obj.has_previous %}
+            <a
+                href="?{% if selected_type != 'all' %}type={{ selected_type }}&{% endif %}page={{ page_obj.previous_page_number }}"
+            >
+                ← 上一页
+            </a>
+        {% else %}
+            <span></span>
+        {% endif %}
+
+
+        <span>
+            {{ page_obj.number }}
+            /
+            {{ page_obj.paginator.num_pages }}
+        </span>
+
+
+        {% if page_obj.has_next %}
+            <a
+                href="?{% if selected_type != 'all' %}type={{ selected_type }}&{% endif %}page={{ page_obj.next_page_number }}"
+            >
+                下一页 →
+            </a>
+        {% endif %}
+
+    </nav>
+
+{% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

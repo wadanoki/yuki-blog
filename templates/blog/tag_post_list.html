@@ -1,0 +1,167 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    #{{ tag.name }} - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    标签 {{ tag.name }} 下的全部公开文稿。
+{% endblock %}
+
+{% block content %}
+
+<section class="relative overflow-hidden pb-32 pt-32">
+    <div class="section-glow" aria-hidden="true"></div>
+
+    <div class="content-shell relative z-10">
+
+        <header class="mb-16">
+
+            <p
+                class="text-caption-10 tracking-[0.28em] text-neutral-5"
+            >
+                标签
+            </p>
+
+            <div class="mt-5 flex flex-wrap items-end gap-4">
+
+                <strong
+                    class="font-serif text-[64px] font-normal leading-none text-neutral-10 md:text-[76px]"
+                >
+                    {{ tag_post_count }}
+                </strong>
+
+                <p class="pb-2 text-copy-13 text-neutral-5">
+                    篇 · 散落在 {{ tag_category_count }} 个分类
+                </p>
+
+            </div>
+
+            <h1
+                class="mt-4 font-serif text-display-36 font-normal text-neutral-10"
+            >
+                <span class="text-accent">#</span>{{ tag.name }}
+            </h1>
+
+            {% if tag_start_year %}
+                <p class="mt-4 text-copy-13 text-neutral-5">
+                    始于 {{ tag_start_year }} 年
+                </p>
+            {% endif %}
+
+            <div class="mt-8 h-px w-10 bg-accent"></div>
+
+        </header>
+
+
+        {% regroup posts by published_at.year as posts_by_year %}
+
+
+        <div class="space-y-12">
+
+            {% for year_group in posts_by_year %}
+
+                <section>
+
+                    <header class="mb-4 flex items-end gap-3">
+
+                        <h2
+                            class="font-serif text-display-36 font-normal leading-none text-neutral-4"
+                        >
+                            {{ year_group.grouper }}
+                        </h2>
+
+                        <span class="pb-1 text-caption-10 text-neutral-5">
+                            {{ year_group.list|length }} 篇
+                        </span>
+
+                    </header>
+
+
+                    <div class="divide-y divide-neutral-3">
+
+                        {% for post in year_group.list %}
+
+                            <article
+                                class="group grid gap-3 py-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-8"
+                            >
+
+                                <h3
+                                    class="font-serif text-copy-14 leading-7 text-neutral-8 transition-colors group-hover:text-accent"
+                                >
+                                    <a href="{{ post.get_absolute_url }}">
+                                        {{ post.title }}
+                                    </a>
+                                </h3>
+
+
+                                <div
+                                    class="flex flex-wrap items-center gap-x-5 gap-y-1 sm:justify-end"
+                                >
+
+                                    {% if post.category %}
+                                        <a
+                                            href="{{ post.category.get_absolute_url }}"
+                                            class="text-caption-10 text-accent transition-colors hover:text-neutral-9"
+                                        >
+                                            {{ post.category.name }}
+                                        </a>
+                                    {% endif %}
+
+                                    <time
+                                        class="min-w-16 text-right text-caption-10 text-neutral-5"
+                                        datetime="{{ post.published_at|date:'c' }}"
+                                    >
+                                        {{ post.published_at|date:"n月j日" }}
+                                    </time>
+
+                                </div>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% empty %}
+
+                <div class="py-24 text-center">
+
+                    <p
+                        class="font-serif text-title-20 text-neutral-6"
+                    >
+                        该标签暂时没有公开文稿
+                    </p>
+
+                    <a
+                        href="{% url 'blog:post_list' %}"
+                        class="mt-5 inline-block text-copy-13 text-accent"
+                    >
+                        返回全部文稿
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="mt-16 border-t border-neutral-3 pt-7">
+
+            <a
+                href="{% url 'blog:post_list' %}"
+                class="inline-flex items-center gap-2 text-copy-13 text-neutral-6 transition-colors hover:text-accent"
+            >
+                <span aria-hidden="true">←</span>
+                返回全部文稿
+            </a>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

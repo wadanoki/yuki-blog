@@ -1,0 +1,30 @@
+{
+  "name": "yuki-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "css:dev": "tailwindcss -i ./frontend/src/app.css -o ./static/dist/app.css --watch",
+    "css:build": "tailwindcss -i ./frontend/src/app.css -o ./static/dist/app.css --minify",
+    "build:static": "pnpm run css:build && python manage.py export_content --clean && python manage.py build_static_site --clean",
+    "build:pages": "pip install -r requirements.txt && pnpm run build:static"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.12.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.2",
+    "tailwindcss": "^4.3.2"
+  },
+  "dependencies": {
+    "@yohaku/design-system": "^0.0.2"
+  }
+}

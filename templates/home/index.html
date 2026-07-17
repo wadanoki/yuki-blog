@@ -1,0 +1,340 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Yuki Blog {% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 首页专属：强制一屏，不产生滚动条 */
+    .home-hero-section {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        /* 这里不再设置 background，直接继承全局 body 的背景图 */
+    }
+
+    /* -----------------------------------------
+       头像转场动画
+       ----------------------------------------- */
+    .avatar-wrapper {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+        transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .avatar-interactive {
+        width: 140px;
+        height: 140px;
+        border-radius: 9999px;
+        background-color: #f5f5f5;
+        box-shadow: 0 0 35px rgba(244, 143, 177, 0.5);
+        border: 3px solid rgba(255, 255, 255, 0.95);
+        overflow: hidden;
+        opacity: 0;
+        filter: blur(8px);
+        transform: scale(0.6) rotate(-360deg);
+        animation: avatar-intro-spin 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .avatar-interactive img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    @keyframes avatar-intro-spin {
+        0% { opacity: 0; filter: blur(8px); transform: scale(0.6) rotate(-360deg); }
+        100% { opacity: 1; filter: blur(0px); transform: scale(1) rotate(0deg); }
+    }
+
+    .avatar-wrapper.is-shrunk {
+        top: 32px;
+        left: 40px;
+        transform: translate(0, 0);
+    }
+
+    .avatar-wrapper.is-shrunk .avatar-interactive {
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 0 10px rgba(244, 143, 177, 0.2);
+    }
+
+    /* -----------------------------------------
+   左侧近期笔墨面板（往上挪动，top 调整为 45%）
+   ----------------------------------------- */
+.left-writing-panel {
+    position: absolute;
+    left: 8%;
+    top: 45%; /* 向上挪动 5%，原为 50% */
+    transform: translateY(-50%) translateX(-20px);
+    width: 380px;
+    max-width: 40%;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.25, 1, 0.5, 1);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* 别忘了这里也要同步修改 top 属性的值 */
+.left-writing-panel.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0); /* 保持 translateY(-50%) 垂直居中对齐 */
+}
+    /* -----------------------------------------
+       右侧手写台词
+       ----------------------------------------- */
+    .floating-quote-container {
+        position: absolute;
+        right: 12%;
+        top: 48%;
+        transform: translateY(-50%);
+        z-index: 5;
+        pointer-events: none;
+    }
+
+    .handwritten-quote {
+        font-family: "Kaiti", "STKaiti", "Georgia", serif;
+        font-size: 1.3rem;
+        font-style: italic;
+        color: rgba(74, 85, 104, 0.8);
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.15em;
+        white-space: nowrap;
+        width: 0;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .dark .handwritten-quote {
+        color: rgba(229, 231, 235, 0.8);
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .handwritten-quote.is-writing {
+        animation: typing 2.5s steps(21) forwards;
+    }
+
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    /* -----------------------------------------
+   底部时间轴（往上挪动，bottom 调整为 80px）
+   ----------------------------------------- */
+.bottom-timeline-panel {
+    position: absolute;
+    bottom: 80px; /* 向上挪动，原为 30px */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 1200px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+    .bottom-timeline-panel.is-visible {
+        opacity: 1;
+    }
+
+    .timeline-baseline {
+        position: absolute;
+        left: 0;
+        top: 12px;
+        height: 1px;
+        background: rgba(115, 115, 115, 0.25);
+        width: 0%;
+        transition: width 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .timeline-baseline-accent {
+        position: absolute;
+        right: 0;
+        top: 12px;
+        height: 1px;
+        background: rgba(244, 143, 177, 0.4);
+        width: 0%;
+        transition: width 2.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .bottom-timeline-panel.is-visible .timeline-baseline { width: 100%; }
+    .bottom-timeline-panel.is-visible .timeline-baseline-accent { width: calc(100% - {{ today_position }}%); }
+
+    .timeline-item, .timeline-today-marker {
+        opacity: 0;
+        transition: opacity 1s ease 1.2s;
+    }
+
+    .bottom-timeline-panel.is-visible .timeline-item,
+    .bottom-timeline-panel.is-visible .timeline-today-marker {
+        opacity: 1;
+    }
+
+    .bottom-timeline-panel .timeline-item {
+        z-index: 20;
+    }
+
+    .bottom-timeline-panel .timeline-tooltip {
+        z-index: 30;
+    }
+
+    .timeline-top-stats, .timeline-bottom-details, .timeline-seasons {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 1.5s ease 1.5s, transform 1.5s cubic-bezier(0.25, 1, 0.5, 1) 1.5s;
+    }
+
+    .bottom-timeline-panel.is-visible .timeline-top-stats,
+    .bottom-timeline-panel.is-visible .timeline-bottom-details,
+    .bottom-timeline-panel.is-visible .timeline-seasons {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="home-hero-section">
+    <!-- 头像容器 -->
+    <div class="avatar-wrapper" id="transition-avatar">
+        <div class="avatar-interactive">
+            <img src="{% static 'images/avatar.png' %}" alt="Yuki 的头像">
+        </div>
+    </div>
+
+    <!-- 左侧：近期笔墨 -->
+    <aside class="left-writing-panel" id="writing-panel">
+        <header class="mb-6 border-b border-neutral-3/30 pb-3">
+            <p class="text-caption-10 uppercase tracking-[0.15em] text-neutral-5">Recent Writing</p>
+            <h2 class="mt-1 font-serif text-title-20 font-normal text-neutral-8">近期笔墨</h2>
+        </header>
+        <ol class="space-y-4">
+            {% for post in posts|slice:":4" %}
+                <li class="group relative flex flex-col min-w-0">
+                    <div class="flex items-center gap-2 text-caption-10 text-neutral-5 mb-1">
+                        <span class="font-serif text-accent">0{{ forloop.counter }}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{{ post.published_at|timesince }}前</span>
+                    </div>
+                    <h3 class="text-copy-13 font-serif font-normal leading-relaxed text-neutral-8 transition-colors group-hover:text-accent truncate">
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h3>
+                </li>
+            {% empty %}
+                <li class="py-4 text-center text-copy-13 text-neutral-5">暂时还没有文章。</li>
+            {% endfor %}
+        </ol>
+    </aside>
+
+    <!-- 右侧：手写台词 -->
+    <div class="floating-quote-container">
+        <span class="handwritten-quote" id="handwritten-text">
+            「无论发生什么，请不要后悔与我的相遇。」
+        </span>
+    </div>
+
+    <!-- 底部时间轴 -->
+    <footer class="bottom-timeline-panel" id="timeline-panel">
+        <!-- 上层 -->
+        <div class="timeline-top-stats text-center mb-6">
+            <p class="font-serif text-copy-14 text-neutral-5 tracking-widest">
+                <span>{{ nav_total_content_count|default:0 }} 篇</span>
+                <span class="mx-3 text-neutral-3">·</span>
+                <span>{{ nav_total_word_count|default:"0" }} 字</span>
+                <span class="mx-3 text-neutral-3">·</span>
+                <span>建站 {{ nav_site_running_days|default:1 }} 天</span>
+            </p>
+        </div>
+
+        <!-- 中层 -->
+        <div class="relative h-20">
+            <div class="timeline-baseline" aria-hidden="true"></div>
+            <div class="timeline-baseline-accent" aria-hidden="true"></div>
+
+            {% for item in timeline_items %}
+                {% if item.url %}
+                    <a
+                        href="{{ item.url }}"
+                        class="timeline-item group absolute top-3"
+                        style="left: {{ item.position }}%; --timeline-level: {{ item.level }};"
+                        aria-label="{{ item.type_name }}：{{ item.title }}"
+                    >
+                {% else %}
+                    <button
+                        type="button"
+                        class="timeline-item group absolute top-3"
+                        style="left: {{ item.position }}%; --timeline-level: {{ item.level }};"
+                        aria-label="{{ item.type_name }}：{{ item.title }}"
+                    >
+                {% endif %}
+                        <span class="timeline-dynamic-dot {% if forloop.last %}timeline-dynamic-dot-current{% endif %}"></span>
+                        <span class="timeline-tooltip" role="tooltip">
+                            <span class="timeline-tooltip-title">
+                                {{ item.title }}
+                            </span>
+                            <span class="timeline-tooltip-meta">
+                                {{ item.type_name }} · {{ item.published_at|date:"n月j日" }}
+                            </span>
+                        </span>
+                {% if item.url %}</a>{% else %}</button>{% endif %}
+            {% endfor %}
+
+            <div class="timeline-today-marker absolute top-[-0.6rem] -translate-x-1/2" style="left: {{ today_position }}%;">
+                <span class="font-serif text-caption-10 text-accent">今</span>
+                <span class="mx-auto mt-1 block h-5 w-px bg-accent/50"></span>
+            </div>
+
+            <div class="timeline-seasons absolute inset-x-0 top-8 grid grid-cols-4 text-center text-caption-10 text-neutral-5">
+                <span>冬</span><span>春</span><span>夏</span><span>秋</span>
+            </div>
+        </div>
+
+        <!-- 下层 -->
+        <div class="timeline-bottom-details text-center mt-4">
+            <p class="font-serif text-copy-13 text-neutral-7">
+                近作 · {% if latest_item.url %}<a href="{{ latest_item.url }}" class="hover:text-accent">{{ latest_item.title }}</a>{% else %}在 CDN 边缘做灰度：分流在缓存前，资产在灰度外{% endif %}
+            </p>
+            <p class="mt-2 font-serif text-copy-12 italic text-neutral-4 tracking-wider">
+                本年 {{ timeline_count|default:"39" }} 篇 <span class="mx-1">·</span>
+                <a href="{% url 'blog:timeline' %}" class="not-italic text-accent hover:underline">翻阅完整时间线 →</a>
+            </p>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const avatar = document.getElementById("transition-avatar");
+        const writingPanel = document.getElementById("writing-panel");
+        const timelinePanel = document.getElementById("timeline-panel");
+        const quoteText = document.getElementById("handwritten-text");
+
+        // 触发转场
+        setTimeout(() => {
+            avatar.classList.add("is-shrunk");
+            writingPanel.classList.add("is-visible");
+            timelinePanel.classList.add("is-visible");
+        }, 2200);
+
+        // 触发手写
+        setTimeout(() => {
+            quoteText.classList.add("is-writing");
+        }, 2600);
+    });
+</script>
+{% endblock %}

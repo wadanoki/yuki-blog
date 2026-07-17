@@ -1,0 +1,54 @@
+{% load i18n %}
+
+<button
+    class="sticky toggle-nav-sidebar"
+    id="toggle-nav-sidebar"
+    aria-label="{% translate 'Toggle navigation' %}"
+></button>
+
+<nav
+    class="sticky yuki-sidebar"
+    id="nav-sidebar"
+    aria-label="后台导航"
+>
+    <ul class="yuki-sidebar__menu">
+        <li>
+            <a
+                href="{% url 'admin:index' %}"
+                class="yuki-sidebar__item yuki-sidebar__item--dashboard{% if request.resolver_match.url_name == 'index' %} is-active{% endif %}"
+            >
+                <span
+                    class="yuki-sidebar__icon"
+                    aria-hidden="true"
+                ></span>
+                <span>仪表盘</span>
+            </a>
+        </li>
+
+        {% for app in available_apps %}
+            {% for model in app.models %}
+                {% if model.admin_url %}
+                    <li>
+                        <a
+                            href="{{ model.admin_url }}"
+                            class="yuki-sidebar__item yuki-sidebar__item--{{ model.object_name|lower }}{% if model.admin_url in request.path|urlencode %} is-active{% endif %}"
+                            {% if model.admin_url in request.path|urlencode %}
+                                aria-current="page"
+                            {% endif %}
+                        >
+                            <span
+                                class="yuki-sidebar__icon"
+                                aria-hidden="true"
+                            ></span>
+                            <span>{{ model.name }}</span>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        {% empty %}
+            <li class="yuki-sidebar__empty">
+                {% translate "You don’t have permission to view or edit anything." %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>

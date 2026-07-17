@@ -1,0 +1,43 @@
+@layer components {
+    .reveal {
+        animation: reveal-up 700ms var(--ease-out) both;
+    }
+
+    .reveal-delay-1 { animation-delay: 100ms; }
+    .reveal-delay-2 { animation-delay: 180ms; }
+    .reveal-delay-3 { animation-delay: 260ms; }
+    .reveal-delay-4 { animation-delay: 340ms; }
+}
+
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes nav-dropdown-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 7px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal,
+    .reveal-delay-1,
+    .reveal-delay-2,
+    .reveal-delay-3,
+    .reveal-delay-4 {
+        animation: none;
+    }
+}

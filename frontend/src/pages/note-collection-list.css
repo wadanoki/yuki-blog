@@ -1,0 +1,120 @@
+@layer components {
+    .note-collection-index-page {
+        position: relative;
+        min-height: 100vh;
+        padding: 130px 0 120px;
+        overflow: hidden;
+    }
+
+    .note-collection-index-shell {
+        position: relative;
+        z-index: 1;
+        width: min(calc(100% - 40px), 1120px);
+        margin-inline: auto;
+    }
+
+    .note-collection-index-header {
+        position: relative;
+        display: flex;
+        min-height: 120px;
+        align-items: flex-start;
+        padding-left: 38px;
+    }
+
+    .note-collection-index-line {
+        position: absolute;
+        top: 0;
+        bottom: -520px;
+        left: 0;
+        width: 2px;
+        background: var(--color-neutral-3);
+    }
+
+    .note-collection-index-header h1 {
+        color: var(--color-neutral-10);
+        font-family:
+            "Noto Sans SC",
+            "Microsoft YaHei",
+            sans-serif;
+        font-size: clamp(42px, 6vw, 62px);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .note-collection-index-list {
+        position: relative;
+        margin-top: 26px;
+        padding-left: 2px;
+    }
+
+    .note-collection-index-row {
+        position: relative;
+        display: grid;
+        min-height: 68px;
+        padding: 0 30px 0 38px;
+        grid-template-columns: 155px minmax(0, 1fr);
+        gap: 0;
+        align-items: center;
+        color: var(--color-neutral-8);
+        transition:
+            background-color 180ms ease,
+            color 180ms ease;
+    }
+
+    .note-collection-index-row::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 3px;
+        content: "";
+        background: transparent;
+        transition: background-color 180ms ease;
+    }
+
+    .note-collection-index-row:hover {
+        background:
+            color-mix(
+                in srgb,
+                var(--color-neutral-2) 75%,
+                transparent
+            );
+        color: var(--color-neutral-10);
+    }
+
+    .note-collection-index-row:hover::before {
+        background: var(--color-accent);
+    }
+
+    .note-collection-index-row time {
+        color: var(--color-neutral-5);
+        font-size: 17px;
+        font-variant-numeric: tabular-nums;
+        transition: color 180ms ease;
+    }
+
+    .note-collection-index-row > span {
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    .note-collection-index-row:hover time {
+        color: var(--color-accent);
+    }
+
+    .note-collection-index-footer {
+        margin-top: 60px;
+        padding-top: 24px;
+        border-top: 1px solid var(--color-neutral-3);
+        color: var(--color-neutral-5);
+        font-size: 12px;
+    }
+
+    .note-collection-index-footer a {
+        transition: color 160ms ease;
+    }
+
+    .note-collection-index-footer a:hover {
+        color: var(--color-accent);
+    }
+}

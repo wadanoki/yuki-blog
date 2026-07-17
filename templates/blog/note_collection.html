@@ -1,0 +1,126 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    {{ collection.name }} - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    {{ collection.description|default:collection.name }}
+{% endblock %}
+
+{% block content %}
+
+<section class="note-collection-page">
+
+    <div
+        class="section-glow"
+        aria-hidden="true"
+    ></div>
+
+    <div class="note-collection-shell">
+
+        <header class="note-collection-hero">
+
+            <div class="note-collection-icon">
+                {{ collection.icon|default:"◇" }}
+            </div>
+
+
+            <div class="note-collection-heading">
+
+                <h1>
+                    {{ collection.name }}
+                </h1>
+
+                {% if collection.description %}
+                    <p class="note-collection-description">
+                        {{ collection.description }}
+                    </p>
+                {% endif %}
+
+
+                <div class="note-collection-stats">
+
+                    <span>
+                        共有手记：{{ collection_note_count }} 篇
+                    </span>
+
+                    {% if collection_latest_note %}
+                        <span>
+                            · 最近更新
+                            {{ collection_latest_note.published_at|timesince }}前
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <div class="note-collection-divider"></div>
+
+
+        {% regroup notes by published_at.year as notes_by_year %}
+
+
+        <div class="note-collection-years">
+
+            {% for year_group in notes_by_year %}
+
+                <section>
+
+                    <h2>
+                        {{ year_group.grouper }}
+                    </h2>
+
+
+                    <div class="note-collection-list">
+
+                        {% for note in year_group.list %}
+
+                            <article>
+
+                                <time
+                                    datetime="{{ note.published_at|date:'c' }}"
+                                >
+                                    {{ note.published_at|date:"m/d" }}
+                                </time>
+
+                                <a href="{{ note.get_absolute_url }}">
+                                    {{ note.title }}
+                                </a>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% empty %}
+
+                <p class="note-empty-state">
+                    该专栏暂时没有公开手记。
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <footer class="note-collection-footer">
+
+            <a href="{% url 'blog:note_list' %}">
+                ← 返回全部手记
+            </a>
+
+        </footer>
+
+    </div>
+
+</section>
+
+{% endblock %}

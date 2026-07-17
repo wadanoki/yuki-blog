@@ -1,0 +1,444 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}
+    文稿 - Yuki Blog
+{% endblock %}
+
+{% block description %}
+    Yuki Blog 的全部公开文稿。
+{% endblock %}
+
+{% block content %}
+
+<section class="relative overflow-hidden pb-28 pt-32">
+    <div class="section-glow" aria-hidden="true"></div>
+
+    <div class="site-shell relative z-10">
+
+        <header class="mb-10">
+            <p
+                class="text-caption-10 uppercase tracking-[0.28em] text-neutral-5"
+            >
+                Blog
+            </p>
+
+            <h1
+                class="mt-3 font-serif text-title-28 font-normal text-neutral-10 md:text-display-36"
+            >
+                {% if active_tag %}
+                    #{{ active_tag.name }}
+                {% elif keyword %}
+                    搜索结果
+                {% else %}
+                    文稿
+                {% endif %}
+            </h1>
+
+            {% if keyword %}
+                <p class="mt-3 text-copy-13 text-neutral-6">
+                    与“{{ keyword }}”相关的公开文稿
+                </p>
+            {% endif %}
+        </header>
+
+
+        <div
+            class="grid items-start gap-14 lg:grid-cols-[minmax(0,1fr)_300px]"
+        >
+
+            <main class="min-w-0">
+
+                {% if featured_post and not keyword and not active_tag %}
+
+                    <article
+                        class="mb-8 rounded-xl border border-neutral-3 bg-neutral-1/65 p-6 backdrop-blur-sm md:p-7"
+                    >
+                        <p class="text-label-12 text-accent">
+                            置顶
+                        </p>
+
+                        <h2
+                            class="mt-4 font-serif text-title-24 font-normal leading-relaxed text-neutral-10"
+                        >
+                            <a
+                                href="{{ featured_post.get_absolute_url }}"
+                                class="transition-colors hover:text-accent"
+                            >
+                                {{ featured_post.title }}
+                            </a>
+                        </h2>
+
+                        <p
+                            class="mt-3 text-copy-14 leading-8 text-neutral-7"
+                        >
+                            {% if featured_post.excerpt %}
+                                {{ featured_post.excerpt }}
+                            {% else %}
+                                {{ featured_post.content|striptags|truncatechars:220 }}
+                            {% endif %}
+                        </p>
+
+                        <div
+                            class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-caption-10 text-neutral-5"
+                        >
+                            <time
+                                datetime="{{ featured_post.published_at|date:'c' }}"
+                            >
+                                {{ featured_post.published_at|date:"Y年n月j日" }}
+                            </time>
+
+                            {% if featured_post.category %}
+                                <span aria-hidden="true">·</span>
+
+                                <a
+                                    href="{{ featured_post.category.get_absolute_url }}"
+                                    class="text-neutral-7 transition-colors hover:text-accent"
+                                >
+                                    {{ featured_post.category.name }}
+                                </a>
+                            {% endif %}
+
+                            {% for tag in featured_post.tags.all %}
+    <span aria-hidden="true">/</span>
+
+    <a
+        href="{{ tag.get_absolute_url }}"
+        class="transition-colors hover:text-accent"
+    >
+        {{ tag.name }}
+    </a>
+{% endfor %}
+                        </div>
+                    </article>
+
+                {% endif %}
+
+
+                <div
+                    class="mb-1 flex flex-wrap items-center justify-between gap-4 border-b border-neutral-3 pb-4"
+                >
+                    <p class="text-copy-13 text-neutral-5">
+                        共 {{ published_post_count }} 篇
+                    </p>
+
+                    <nav
+                        class="flex items-center gap-5 text-copy-13"
+                        aria-label="文稿排序"
+                    >
+                        <a
+                            href="?sort=latest{% if keyword %}&q={{ keyword|urlencode }}{% endif %}{% if active_tag %}&tag={{ active_tag.slug }}{% endif %}"
+                            class="
+                                transition-colors hover:text-accent
+                                {% if current_sort == 'latest' %}
+                                    text-accent
+                                {% else %}
+                                    text-neutral-5
+                                {% endif %}
+                            "
+                        >
+                            最新
+                        </a>
+
+                        <a
+                            href="?sort=oldest{% if keyword %}&q={{ keyword|urlencode }}{% endif %}{% if active_tag %}&tag={{ active_tag.slug }}{% endif %}"
+                            class="
+                                transition-colors hover:text-accent
+                                {% if current_sort == 'oldest' %}
+                                    text-accent
+                                {% else %}
+                                    text-neutral-5
+                                {% endif %}
+                            "
+                        >
+                            最早
+                        </a>
+
+                        <a
+                            href="?sort=updated{% if keyword %}&q={{ keyword|urlencode }}{% endif %}{% if active_tag %}&tag={{ active_tag.slug }}{% endif %}"
+                            class="
+                                transition-colors hover:text-accent
+                                {% if current_sort == 'updated' %}
+                                    text-accent
+                                {% else %}
+                                    text-neutral-5
+                                {% endif %}
+                            "
+                        >
+                            最近更新
+                        </a>
+                    </nav>
+                </div>
+
+
+                <div class="divide-y divide-neutral-3">
+
+                    {% for post in posts %}
+
+                        <article class="group py-7">
+
+                            <h2
+                                class="font-serif text-title-20 font-normal leading-relaxed text-neutral-9 transition-colors group-hover:text-accent"
+                            >
+                                <a href="{{ post.get_absolute_url }}">
+                                    {{ post.title }}
+                                </a>
+                            </h2>
+
+                            <p
+                                class="mt-2 text-copy-13 leading-7 text-neutral-6"
+                            >
+                                {% if post.excerpt %}
+                                    {{ post.excerpt|truncatechars:155 }}
+                                {% else %}
+                                    {{ post.content|striptags|truncatechars:155 }}
+                                {% endif %}
+                            </p>
+
+                            <div
+                                class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-caption-10 text-neutral-5"
+                            >
+                                <time
+                                    datetime="{{ post.published_at|date:'c' }}"
+                                >
+                                    {{ post.published_at|timesince }}前
+                                </time>
+
+                                {% if post.category %}
+                                    <span aria-hidden="true">·</span>
+
+                                    <a
+                                        href="{{ post.category.get_absolute_url }}"
+                                        class="text-neutral-7 transition-colors hover:text-accent"
+                                    >
+                                        {{ post.category.name }}
+                                    </a>
+                                {% endif %}
+
+                                {% for tag in post.tags.all|slice:":3" %}
+    <span aria-hidden="true">/</span>
+
+    <a
+        href="{{ tag.get_absolute_url }}"
+        class="transition-colors hover:text-accent"
+    >
+        {{ tag.name }}
+    </a>
+{% endfor %}
+
+                                {% if post.tags.count > 3 %}
+                                    <span>
+                                        +{{ post.tags.count|add:"-3" }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                        </article>
+
+                    {% empty %}
+
+                        <div class="py-24 text-center">
+                            <p class="font-serif text-title-20 text-neutral-6">
+                                没有找到符合条件的文稿
+                            </p>
+
+                            <a
+                                href="{% url 'blog:post_list' %}"
+                                class="mt-5 inline-block text-copy-13 text-accent"
+                            >
+                                返回全部文稿
+                            </a>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% if is_paginated %}
+
+                    <nav
+                        class="mt-12 flex items-center justify-center gap-5 text-copy-13 text-neutral-6"
+                        aria-label="文稿分页"
+                    >
+                        {% if page_obj.has_previous %}
+                            <a
+                                href="?page={{ page_obj.previous_page_number }}&sort={{ current_sort }}{% if keyword %}&q={{ keyword|urlencode }}{% endif %}{% if active_tag %}&tag={{ active_tag.slug }}{% endif %}"
+                                class="transition-colors hover:text-accent"
+                            >
+                                ← 上一页
+                            </a>
+                        {% endif %}
+
+                        <span class="text-caption-10 text-neutral-5">
+                            {{ page_obj.number }}
+                            /
+                            {{ page_obj.paginator.num_pages }}
+                        </span>
+
+                        {% if page_obj.has_next %}
+                            <a
+                                href="?page={{ page_obj.next_page_number }}&sort={{ current_sort }}{% if keyword %}&q={{ keyword|urlencode }}{% endif %}{% if active_tag %}&tag={{ active_tag.slug }}{% endif %}"
+                                class="transition-colors hover:text-accent"
+                            >
+                                下一页 →
+                            </a>
+                        {% endif %}
+                    </nav>
+
+                {% endif %}
+
+            </main>
+
+
+            <aside
+                class="rounded-xl border border-neutral-3 bg-neutral-1/60 p-5 backdrop-blur-sm lg:sticky lg:top-24"
+            >
+                <form
+                    method="get"
+                    action="{% url 'blog:post_list' %}"
+                    class="border-b border-neutral-3 pb-5"
+                >
+                    <label
+                        for="post-search"
+                        class="flex items-center gap-3"
+                    >
+                        <span
+                            class="text-title-20 text-neutral-5"
+                            aria-hidden="true"
+                        >
+                            ⌕
+                        </span>
+
+                        <input
+                            id="post-search"
+                            type="search"
+                            name="q"
+                            value="{{ keyword }}"
+                            placeholder="搜索"
+                            class="min-w-0 flex-1 bg-transparent text-copy-13 text-neutral-9 outline-none placeholder:text-neutral-5"
+                        >
+                    </label>
+                </form>
+
+
+                <div class="mt-5 flex flex-wrap gap-2">
+
+                    {% for tag in tags %}
+
+                        <a
+    href="{{ tag.get_absolute_url }}"
+    class="rounded-md border border-neutral-3 bg-neutral-2 px-3 py-2 text-caption-10 text-neutral-7 transition hover:border-neutral-4 hover:text-neutral-10"
+>
+    {{ tag.name }}
+    <span class="text-neutral-5">
+        ({{ tag.published_count }})
+    </span>
+</a>
+                    {% empty %}
+
+                        <p class="text-copy-13 text-neutral-5">
+                            暂时没有标签。
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+
+                {% if active_tag or keyword %}
+
+                    <a
+                        href="{% url 'blog:post_list' %}"
+                        class="mt-5 inline-block text-copy-13 text-neutral-5 transition-colors hover:text-accent"
+                    >
+                        清除筛选
+                    </a>
+
+                {% else %}
+
+                    <button
+    id="open-tag-cloud"
+    type="button"
+    class="mt-5 inline-block text-copy-13 text-neutral-5 transition-colors hover:text-accent"
+    aria-haspopup="dialog"
+    aria-controls="tag-cloud-dialog"
+>
+    全部标签
+</button>
+
+                {% endif %}
+            </aside>
+
+        </div>
+    </div>
+</section>
+<div
+    id="tag-cloud-dialog"
+    class="fixed inset-0 z-[100] hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tag-cloud-title"
+>
+
+    {# 半透明遮罩 #}
+    <button
+        id="tag-cloud-backdrop"
+        type="button"
+        class="absolute inset-0 cursor-default bg-neutral-10/20 backdrop-blur-sm"
+        aria-label="关闭标签云"
+    ></button>
+
+
+    {# 标签云窗口 #}
+    <section
+        class="absolute inset-x-3 top-1/2 mx-auto flex max-h-[86vh] max-w-6xl -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-neutral-3 bg-neutral-1 shadow-2xl sm:inset-x-6"
+    >
+        <header
+            class="flex shrink-0 items-center justify-between border-b border-neutral-3 px-5 py-4 sm:px-6"
+        >
+            <h2
+                id="tag-cloud-title"
+                class="font-serif text-title-20 font-normal text-neutral-10"
+            >
+                标签云
+            </h2>
+
+            <button
+                id="close-tag-cloud"
+                type="button"
+                class="grid size-9 place-items-center rounded-full text-title-20 text-neutral-5 transition hover:bg-neutral-2 hover:text-neutral-10"
+                aria-label="关闭标签云"
+            >
+                ×
+            </button>
+        </header>
+
+
+        <div class="overflow-y-auto px-5 py-6 sm:px-6">
+
+            <div class="flex flex-wrap gap-3">
+
+                {% for tag in tags %}
+                    <a
+                        href="{{ tag.get_absolute_url }}"
+                        class="tag-cloud-item inline-flex items-center rounded-lg border border-neutral-3 px-4 py-2.5 text-copy-13 text-neutral-9 transition hover:-translate-y-0.5 hover:border-neutral-5 hover:shadow-sm"
+                        data-tag-index="{{ forloop.counter0 }}"
+                    >
+                        <span>{{ tag.name }}</span>
+
+                        <span class="ml-1 text-neutral-6">
+                            ({{ tag.published_count }})
+                        </span>
+                    </a>
+                {% empty %}
+                    <p class="py-10 text-copy-13 text-neutral-5">
+                        暂时没有标签。
+                    </p>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
